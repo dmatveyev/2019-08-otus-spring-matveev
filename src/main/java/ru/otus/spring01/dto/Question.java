@@ -15,6 +15,8 @@ public class Question {
 
     private List<String> answers;
 
+    private String userAnswer;
+
     public Question(String question, String ... answers) {
         this.question = question;
         this.answers = new ArrayList<>(Arrays.asList(answers));

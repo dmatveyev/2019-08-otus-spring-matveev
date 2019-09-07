@@ -7,8 +7,11 @@
         <property name="fileName" value="questions.csv"/>
     </bean>
 
-    <bean class="ru.otus.spring01.service.ConsoleServiceImpl" init-method="init">
-        <property name="questionDao" ref="questionDao"/>
+    <bean id = "userInfoService" class="ru.otus.spring01.service.UserInfoServiceImpl"/>
+
+    <bean class="ru.otus.spring01.service.ConsoleQuizServiceImpl" init-method="init" destroy-method="destroy">
+       <constructor-arg name="questionDao" ref="questionDao"/>
+       <constructor-arg name="userInfoService" ref="userInfoService"/>
     </bean>
 
 </beans>
