@@ -7,7 +7,16 @@
         <property name="fileName" value="questions.csv"/>
     </bean>
 
-    <bean id="ioService" class="ru.otus.spring01.service.SystemIOService"/>
+    <bean id="ioStreamFactory" class="ru.otus.spring01.service.IOStreamFactory"/>
+
+    <bean id="in" factory-bean="ioStreamFactory" factory-method="getInputStream"/>
+
+    <bean id="out" factory-bean="ioStreamFactory" factory-method="getPrintStream"/>
+
+    <bean id="ioService" class="ru.otus.spring01.service.SystemIOService">
+       <constructor-arg name="in" ref="in"/>
+        <constructor-arg name="out" ref="out"/>
+    </bean>
 
     <bean id="userInfoService" class="ru.otus.spring01.service.UserInfoServiceImpl">
         <constructor-arg name="ioService" ref="ioService"/>

@@ -6,14 +6,10 @@ import java.util.Scanner;
 
 public class SystemIOService implements IOService {
 
-    private final PrintStream out;
-    private final Scanner scanner;
+    private PrintStream out;
+    private Scanner scanner;
 
-    public SystemIOService() {
-        this(System.out, System.in);
-    }
-
-    private SystemIOService(PrintStream out, InputStream in) {
+    public SystemIOService(PrintStream out, InputStream in) {
         this.out = out;
         this.scanner = new Scanner(in);
     }
