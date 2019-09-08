@@ -1,16 +1,19 @@
 package ru.otus.spring01.service;
 
+import lombok.RequiredArgsConstructor;
 import ru.otus.spring01.dto.UserInfo;
 
-import java.util.Scanner;
-
+@RequiredArgsConstructor
 public class UserInfoServiceImpl implements UserInfoService {
+
+    private final IOService ioService;
+
     @Override
-    public UserInfo extractUserInfo(Scanner scanner) {
-        System.out.print("Input name: ");
-        String name = scanner.nextLine();
-        System.out.print("Input surname: ");
-        String surname = scanner.nextLine();
+    public UserInfo extractUserInfo() {
+        ioService.printString("Input name: ");
+        String name = ioService.readString();
+        ioService.printString("Input surname: ");
+        String surname = ioService.readString();
         return new UserInfo(name, surname);
     }
 }
