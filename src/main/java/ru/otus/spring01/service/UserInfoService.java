@@ -4,5 +4,5 @@ import ru.otus.spring01.dto.UserInfo;
 
 public interface UserInfoService {
 
-    UserInfo extractUserInfo();
+    UserInfo readUserInfo();
 }

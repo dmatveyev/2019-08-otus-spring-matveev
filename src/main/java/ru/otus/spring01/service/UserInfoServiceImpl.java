@@ -9,7 +9,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final IOService ioService;
 
     @Override
-    public UserInfo extractUserInfo() {
+    public UserInfo readUserInfo() {
         ioService.printString("Input name: ");
         String name = ioService.readString();
         ioService.printString("Input surname: ");

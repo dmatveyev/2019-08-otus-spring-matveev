@@ -13,7 +13,7 @@ public class ConsoleQuizServiceImpl implements QuizService {
 
     @Override
     public void testingUser() {
-        UserInfo userInfo = userInfoService.extractUserInfo();
+        UserInfo userInfo = userInfoService.readUserInfo();
         ioService.printString("Hello " + userInfo.getName() + " " + userInfo.getSurname() + "!");
         ioService.printString("Please answer for few questions");
 

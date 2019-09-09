@@ -17,8 +17,11 @@ public class Question {
 
     private String userAnswer;
 
-    public Question(String question, String ... answers) {
+    private String correctAnswer;
+
+    public Question(String question, String correctAnswer, String... answers) {
         this.question = question;
+        this.correctAnswer = correctAnswer;
         this.answers = new ArrayList<>(Arrays.asList(answers));
     }
 }

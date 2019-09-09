@@ -4,7 +4,6 @@ import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
 
 import java.util.List;
-import java.util.Random;
 
 public class QuestionServiceImpl implements QuestionService {
 
@@ -17,6 +16,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    // TODO: 09.09.2019 Возможно стоит возвращать количество правильных ответов
     public void askQuestions() {
         for (Question question : questions) {
             List<String> answers = question.getAnswers();
@@ -41,7 +41,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public String getScore() {
-        Random rnd = new Random();
-        return (rnd.nextInt(questions.size()) + 1) + "/" + questions.size();
+        long countCorrectAnswers = questions
+                .stream()
+                .filter(question -> question.getUserAnswer().equalsIgnoreCase(question.getCorrectAnswer()))
+                .count();
+        return (countCorrectAnswers + "/" + questions.size());
     }
 }
