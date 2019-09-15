@@ -1,15 +1,19 @@
 package ru.otus.spring01.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
 
 import java.util.List;
 
+@Component
 public class QuestionServiceImpl implements QuestionService {
 
     private final IOService ioService;
     private final List<Question> questions;
 
+    @Autowired
     public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
         this.questions = questionDao.getQuestions();
         this.ioService = ioService;
