@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
+import ru.otus.spring01.localization.LocalizationService;
+import ru.otus.spring01.localization.MessageConstants;
 
 import java.util.List;
 
@@ -12,11 +14,13 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final IOService ioService;
     private final List<Question> questions;
+    private final LocalizationService localizationService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
+    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService, LocalizationService localizationService) {
         this.questions = questionDao.getQuestions();
         this.ioService = ioService;
+        this.localizationService = localizationService;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class QuestionServiceImpl implements QuestionService {
                 }
                 int userAnswer = ioService.readInt();
                 while ((0 >= userAnswer) || userAnswer > (answers.size())) {
-                    ioService.printString("Please choose correct answer!");
+                    ioService.printString(localizationService.localize(MessageConstants.INVALID_ANSWER));
                     userAnswer = ioService.readInt();
                 }
                 resultAnswer = String.valueOf(userAnswer);

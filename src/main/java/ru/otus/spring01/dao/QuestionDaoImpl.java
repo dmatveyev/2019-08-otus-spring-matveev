@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring01.dto.Question;
 
@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Getter
@@ -21,13 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionDaoImpl implements QuestionDao {
 
-    private final MessageSource messageSource;
+    private static final String FILE_NAME_TEMPLATE = "questions_%s.csv";
     private String fileName;
 
     @Autowired
-    public QuestionDaoImpl(MessageSource messageSource) {
-        this.messageSource = messageSource;
-        this.fileName = messageSource.getMessage("fileName", null, new Locale("ru"));
+    public QuestionDaoImpl(@Value("${language}") String currentLanguage) {
+        this.fileName = String.format(FILE_NAME_TEMPLATE, currentLanguage);
     }
 
     @Override
