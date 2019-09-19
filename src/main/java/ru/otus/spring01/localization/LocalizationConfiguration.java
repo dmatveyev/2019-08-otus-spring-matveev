@@ -2,20 +2,20 @@ package ru.otus.spring01.localization;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @Getter
 @Setter
+@ConfigurationProperties("localization")
 public class LocalizationConfiguration {
 
-    private final String defaultLanguage;
+    private String defaultLanguage;
 
     private String currentLanguage;
 
-    public LocalizationConfiguration(@Value("${language}")String defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
-        this.currentLanguage = defaultLanguage;
+    public String getCurrentLanguage() {
+        return  currentLanguage == null ? defaultLanguage: currentLanguage;
     }
 }
