@@ -1,7 +1,7 @@
 package ru.otus.spring01.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
 import ru.otus.spring01.localization.LocalizationService;
@@ -9,7 +9,7 @@ import ru.otus.spring01.localization.MessageConstants;
 
 import java.util.List;
 
-@Component
+@Service
 public class QuestionServiceImpl implements QuestionService {
 
     private final IOService ioService;
