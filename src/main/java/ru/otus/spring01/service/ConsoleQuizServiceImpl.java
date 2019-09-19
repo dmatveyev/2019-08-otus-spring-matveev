@@ -1,6 +1,8 @@
 package ru.otus.spring01.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import ru.otus.spring01.dto.UserInfo;
 import ru.otus.spring01.localization.LocalizationService;
@@ -16,6 +18,7 @@ public class ConsoleQuizServiceImpl implements QuizService {
     private final LocalizationService localizationService;
 
     @Override
+    @EventListener(ApplicationStartedEvent.class)
     public void testingUser() {
         UserInfo userInfo = userInfoService.readUserInfo();
         ioService.printString(localizationService.localize(
