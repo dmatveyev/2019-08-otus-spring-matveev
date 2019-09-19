@@ -1,10 +1,12 @@
 package ru.otus.spring01.dao;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.otus.spring01.dto.Question;
+import ru.otus.spring01.localization.LocalizationConfiguration;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -15,10 +17,17 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Repository
 public class QuestionDaoImpl implements QuestionDao {
 
+    private static final String FILE_NAME_TEMPLATE = "questions_%s.csv";
     private String fileName;
+
+    @Autowired
+    public QuestionDaoImpl(LocalizationConfiguration configuration) {
+        String currentLanguage = configuration.getCurrentLanguage();
+        this.fileName = String.format(FILE_NAME_TEMPLATE, currentLanguage);
+    }
 
     @Override
     @SneakyThrows
