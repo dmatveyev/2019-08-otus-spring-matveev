@@ -1,13 +1,13 @@
 package ru.otus.spring01.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.otus.spring01.dto.UserInfo;
 import ru.otus.spring01.localization.LocalizationService;
 import ru.otus.spring01.localization.MessageConstants;
 
 @RequiredArgsConstructor
-@Component
+@Service
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final IOService ioService;

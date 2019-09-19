@@ -1,11 +1,11 @@
 package ru.otus.spring01.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
-@Component
+@Service
 public class SystemIOService implements IOService {
 
     private PrintStream out;

@@ -3,11 +3,11 @@ package ru.otus.spring01.localization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-@Component
+@Service
 public class LocalizationServiceImpl implements LocalizationService {
 
     private Locale currentLocale;
