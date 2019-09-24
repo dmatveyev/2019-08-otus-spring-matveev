@@ -1,7 +1,6 @@
 package ru.otus.spring01.localization;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,9 @@ public class LocalizationServiceImpl implements LocalizationService {
     private MessageSource messageSource;
 
     @Autowired
-    public LocalizationServiceImpl(@Value("${language}") String currentLanguage,
+    public LocalizationServiceImpl(LocalizationConfiguration localizationConfiguration,
                                    MessageSource messageSource) {
-        this.currentLocale = new Locale(currentLanguage);
+        this.currentLocale = new Locale(localizationConfiguration.getCurrentLanguage());
         this.messageSource = messageSource;
     }
 

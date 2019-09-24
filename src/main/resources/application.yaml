@@ -1,0 +1,9 @@
+localization:
+  default-language: en
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  messages:
+    basename: localization/app
+    encoding: UTF-8
