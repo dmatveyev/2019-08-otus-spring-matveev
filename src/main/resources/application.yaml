@@ -5,5 +5,5 @@ spring:
     ansi:
       enabled: ALWAYS
   messages:
-    basename: app
+    basename: localization/app
     encoding: UTF-8
