@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring01.dto.Question;
-import ru.otus.spring01.localization.LocalizationConfiguration;
+import ru.otus.spring01.config.LocalizationConfiguration;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

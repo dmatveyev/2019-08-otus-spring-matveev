@@ -3,6 +3,7 @@ package ru.otus.spring01.localization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import ru.otus.spring01.config.LocalizationConfiguration;
 
 import java.util.Locale;
 
