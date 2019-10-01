@@ -4,55 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
-import ru.otus.spring01.localization.LocalizationService;
-import ru.otus.spring01.localization.MessageConstants;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    private final IOService ioService;
+    private final Queue<Question> questionQueue;
     private final List<Question> questions;
-    private final LocalizationService localizationService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService, LocalizationService localizationService) {
-        this.questions = questionDao.getQuestions();
-        this.ioService = ioService;
-        this.localizationService = localizationService;
-    }
-
-    @Override
-    // TODO: 09.09.2019 Возможно стоит возвращать количество правильных ответов
-    public void askQuestions() {
-        for (Question question : questions) {
-            List<String> answers = question.getAnswers();
-            ioService.printString(question.getQuestion());
-            String resultAnswer;
-            if (answers.size() > 0) {
-                for (int i = 0; i < answers.size(); i++) {
-                    ioService.printString(i + 1 + ") " + answers.get(i));
-                }
-                int userAnswer = ioService.readInt();
-                while ((0 >= userAnswer) || userAnswer > (answers.size())) {
-                    ioService.printString(localizationService.localize(MessageConstants.INVALID_ANSWER));
-                    userAnswer = ioService.readInt();
-                }
-                resultAnswer = String.valueOf(userAnswer);
-            } else {
-                resultAnswer = ioService.readString();
-            }
-            question.setUserAnswer(resultAnswer);
-        }
+    public QuestionServiceImpl(QuestionDao questionDao) {
+        this.questionQueue = new ArrayDeque<>();
+        List<Question> questionsList = questionDao.getQuestions();
+        this.questions = new ArrayList<>(questionsList);
+        questionQueue.addAll(questions);
     }
 
     @Override
     public String getScore() {
         long countCorrectAnswers = questions
                 .stream()
-                .filter(question -> question.getUserAnswer().equalsIgnoreCase(question.getCorrectAnswer()))
+                .filter(question -> question.getCorrectAnswer().equalsIgnoreCase(question.getUserAnswer()))
                 .count();
         return (countCorrectAnswers + "/" + questions.size());
+    }
+
+    @Override
+    public Question getNextQuestion() {
+        return questionQueue.poll();
     }
 }

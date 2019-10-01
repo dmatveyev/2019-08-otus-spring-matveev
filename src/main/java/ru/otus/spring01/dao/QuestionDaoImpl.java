@@ -37,8 +37,11 @@ public class QuestionDaoImpl implements QuestionDao {
             return reader.lines()
                     .map(string -> string.split(";"))
                     .map(strings -> {
-                        String[] answers = Arrays.copyOfRange(strings, 1, strings.length - 1);
-                        return new Question(strings[0], strings[strings.length - 1], answers);
+                        String[] answers = Arrays.copyOfRange(strings, 2, strings.length - 1);
+                        return new Question(Integer.parseInt(strings[0]),
+                                strings[1],
+                                strings[strings.length - 1],
+                                answers);
                     })
                     .collect(Collectors.toList());
         }

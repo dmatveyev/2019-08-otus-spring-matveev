@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 public class Question {
 
+    private Integer questionNumber;
+
     private String question;
 
     private List<String> answers;
@@ -19,7 +21,8 @@ public class Question {
 
     private String correctAnswer;
 
-    public Question(String question, String correctAnswer, String... answers) {
+    public Question(Integer questionNumber, String question, String correctAnswer, String... answers) {
+        this.questionNumber = questionNumber;
         this.question = question;
         this.correctAnswer = correctAnswer;
         this.answers = new ArrayList<>(Arrays.asList(answers));
