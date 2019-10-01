@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = Config.class)
 @ActiveProfiles("test")
 public class QuestionServiceImplTest {
 
