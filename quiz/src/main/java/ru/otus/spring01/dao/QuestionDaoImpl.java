@@ -32,7 +32,7 @@ public class QuestionDaoImpl implements QuestionDao {
     @Override
     @SneakyThrows
     public List<Question> getQuestions() {
-        try (InputStream resourceAsStream = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+        try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(fileName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream))) {
             return reader.lines()
                     .map(string -> string.split(";"))
