@@ -7,12 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.shell.Shell;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import ru.otus.spring01.dto.Question;
 import ru.otus.spring01.localization.LocalizationService;
 import ru.otus.spring01.localization.MessageConstants;
 import ru.otus.spring01.service.QuestionService;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.otus.spring01.shell.QuizShellCommands.DEFAULT_NAME;
 
 @DisplayName("Shell Commands test")
@@ -70,6 +70,7 @@ class QuizShellCommandsTest {
         assertTrue(resultEnd.contains(localizeFirst));
         assertTrue(resultEnd.contains(localizeSecond));
     }
+
     @DisplayName("Получение вопроса")
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
@@ -78,4 +79,18 @@ class QuizShellCommandsTest {
         String nextQuestion = (String) shell.evaluate(() -> QuizShellCommands.NEXT_QUESTION_KEY);
         assertNotNull(nextQuestion);
     }
+
+    @DisplayName("Чтение ответа пользователя")
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void readUserAnswer() {
+        String someAnswer = "answer";
+        shell.evaluate(() -> QuizShellCommands.START_TESTING_KEY);
+        shell.evaluate(() -> QuizShellCommands.NEXT_QUESTION_KEY);
+        shell.evaluate(() -> QuizShellCommands.READ_USER_ANSWER_KEY + " " + someAnswer);
+        Question questionByNumber = questionService.getQuestionByNumber(1);
+        String userAnswer = questionByNumber.getUserAnswer();
+        assertEquals(someAnswer, userAnswer);
+    }
+
 }

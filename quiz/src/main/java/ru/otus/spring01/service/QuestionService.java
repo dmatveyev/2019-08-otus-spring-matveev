@@ -7,4 +7,8 @@ public interface QuestionService {
     String getScore();
 
     Question getNextQuestion();
+
+    Question getQuestionByNumber(int number);
+
+    int getCountQuestion();
 }

@@ -15,6 +15,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final Queue<Question> questionQueue;
     private final List<Question> questions;
+    private int countQuestion;
 
     @Autowired
     public QuestionServiceImpl(QuestionDao questionDao) {
@@ -22,6 +23,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Question> questionsList = questionDao.getQuestions();
         this.questions = new ArrayList<>(questionsList);
         questionQueue.addAll(questions);
+        countQuestion = questions.size();
     }
 
     @Override
@@ -36,5 +38,19 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question getNextQuestion() {
         return questionQueue.poll();
+    }
+
+    @Override
+    public Question getQuestionByNumber(int number) {
+        if (number > 0 && number <= countQuestion ) {
+            return questions.get(number - 1);
+        } else{
+            return null;
+        }
+    }
+
+    @Override
+    public int getCountQuestion() {
+        return countQuestion;
     }
 }
