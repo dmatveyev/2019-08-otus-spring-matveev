@@ -9,7 +9,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import ru.otus.spring01.localization.LocalizationService;
 import ru.otus.spring01.localization.MessageConstants;
+import ru.otus.spring01.service.QuestionService;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.otus.spring01.shell.QuizShellCommands.DEFAULT_NAME;
 
@@ -23,13 +25,17 @@ class QuizShellCommandsTest {
 
     @Autowired
     private LocalizationService localizationService;
+
+    @Autowired
+    private QuestionService questionService;
+
     public static final String LOGIN_WITH_CUSTOM_DATA = QuizShellCommands.START_TESTING_KEY + " %s %s";
 
     @DisplayName("Успешный логин под дефолтным пользователем")
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void successDefaultUserLogin() {
-        String result = (String)shell.evaluate(() -> QuizShellCommands.START_TESTING_KEY);
+        String result = (String) shell.evaluate(() -> QuizShellCommands.START_TESTING_KEY);
         String localize = localizationService.localize(MessageConstants.GREETING,
                 DEFAULT_NAME,
                 DEFAULT_NAME);
@@ -53,4 +59,23 @@ class QuizShellCommandsTest {
         assertTrue(result.contains(localize));
     }
 
+    @DisplayName("Окончание тестирования сразу после логина")
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void endTesting() {
+        shell.evaluate(() -> QuizShellCommands.START_TESTING_KEY);
+        String resultEnd = (String) shell.evaluate(() -> QuizShellCommands.END_TESTING_KEY);
+        String localizeFirst = localizationService.localize(MessageConstants.SCORE, "0");
+        String localizeSecond = localizationService.localize(MessageConstants.CONGRATULATIONS);
+        assertTrue(resultEnd.contains(localizeFirst));
+        assertTrue(resultEnd.contains(localizeSecond));
+    }
+    @DisplayName("Получение вопроса")
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void gettingQuestion() {
+        shell.evaluate(() -> QuizShellCommands.START_TESTING_KEY);
+        String nextQuestion = (String) shell.evaluate(() -> QuizShellCommands.NEXT_QUESTION_KEY);
+        assertNotNull(nextQuestion);
+    }
 }
