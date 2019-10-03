@@ -1,2 +1,6 @@
 localization:
   default-language: en
+spring:
+  shell:
+    interactive:
+      enabled: false

@@ -1,19 +1,26 @@
-package ru.otus.spring01.service;
+package ru.otus.spring01.shell;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import ru.otus.spring01.dto.Question;
 import ru.otus.spring01.dto.UserInfo;
 import ru.otus.spring01.localization.LocalizationService;
 import ru.otus.spring01.localization.MessageConstants;
+import ru.otus.spring01.service.IOService;
+import ru.otus.spring01.service.QuestionService;
+import ru.otus.spring01.service.UserInfoService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @ShellComponent
-public class ConsoleQuizServiceImpl implements QuizService {
+public class QuizShellCommands {
 
+    private static final String NEXT_QUESTION_KEY = "next";
+    private static final String READ_USER_ANSWER_KEY= "answer:";
     private final QuestionService questionService;
     private final UserInfoService userInfoService;
     private final IOService ioService;
@@ -21,7 +28,6 @@ public class ConsoleQuizServiceImpl implements QuizService {
     private Question currentQuestion;
     private boolean isStarting = false;
 
-    @Override
     @ShellMethod("Start testing")
     public void start() {
         if (!isStarting) {
@@ -30,8 +36,7 @@ public class ConsoleQuizServiceImpl implements QuizService {
         }
     }
 
-    @Override
-    @ShellMethod(key = "next", value = "Get next question")
+    @ShellMethod(key = NEXT_QUESTION_KEY, value = "Get next question")
     public String getNextQuestion() {
         Question question = questionService.getNextQuestion();
         if (question == null) {
@@ -49,8 +54,7 @@ public class ConsoleQuizServiceImpl implements QuizService {
         return sb.toString();
     }
 
-    @Override
-    @ShellMethod(key = "answer:", value = "Read user answer")
+    @ShellMethod(key = READ_USER_ANSWER_KEY, value = "Read user answer")
     public void readUserAnswer(String answer) {
         currentQuestion.setUserAnswer(answer);
     }
@@ -71,6 +75,13 @@ public class ConsoleQuizServiceImpl implements QuizService {
         sb.append(System.lineSeparator());
         sb.append(localizationService.localize(MessageConstants.CONGRATULATIONS));
         return sb.toString();
+    }
+
+    @ShellMethodAvailability({NEXT_QUESTION_KEY, READ_USER_ANSWER_KEY})
+    public Availability availabilityOnStartTesting() {
+        return isStarting
+                ? Availability.available()
+                : Availability.unavailable("Testing is not starting");
     }
 
 }
