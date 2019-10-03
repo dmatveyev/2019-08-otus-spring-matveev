@@ -1,5 +1,5 @@
 localization:
-  default-language: en
+  default-language: ru
 spring:
   shell:
     interactive:
