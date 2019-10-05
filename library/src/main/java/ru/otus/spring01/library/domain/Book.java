@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 public class Book extends AbstractNameable {
 
     public Book() {
@@ -21,6 +20,14 @@ public class Book extends AbstractNameable {
 
     private String isbn;
 
-
-
+    @Override
+    public String toString() {
+        return "Book{" +
+                "author=" + author.getName() +
+                ", genre=" + genre +
+                ", isbn='" + isbn + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

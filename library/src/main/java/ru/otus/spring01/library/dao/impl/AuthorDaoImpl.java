@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring01.library.dao.AuthorDao;
 import ru.otus.spring01.library.domain.Author;
+import ru.otus.spring01.library.domain.Book;
+import ru.otus.spring01.library.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,6 +67,21 @@ public class AuthorDaoImpl implements AuthorDao {
             Author author = new Author();
             author.setId(id);
             author.setName(name);
+            List<Book> books = new ArrayList<>();
+            while (resultSet.next()) {
+                String bookUuid = resultSet.getString(3);
+                String bookName = resultSet.getString(4);
+                String bookGenre = resultSet.getString(5);
+                String bookIsbn= resultSet.getString(6);
+                Book book = new Book();
+                book.setId(UUID.fromString(bookUuid));
+                book.setGenre(Genre.getGenreByCode(bookGenre));
+                book.setIsbn(bookIsbn);
+                book.setName(bookName);
+                book.setAuthor(author);
+                books.add(book);
+            }
+            author.setBooks(books);
             return author;
         }
     }

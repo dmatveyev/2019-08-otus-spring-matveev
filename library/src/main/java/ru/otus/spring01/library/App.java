@@ -44,6 +44,12 @@ public class App {
         book.setGenre(Genre.FANTASY);
         book.setIsbn(isbnGenerator.generateNumber());
         bookDao.insert(book);
+        Book book1 = new Book();
+        book1.setName("Adventures 2");
+        book1.setAuthor(author);
+        book1.setGenre(Genre.FANTASY);
+        book1.setIsbn(isbnGenerator.generateNumber());
+        bookDao.insert(book1);
         System.out.println(bookDao.getByGenre(Genre.FANTASY));
         System.out.println(bookDao.getByISBN(book.getIsbn()));
         System.out.println(bookDao.getByNameLike("adve"));
