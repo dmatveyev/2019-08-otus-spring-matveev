@@ -15,4 +15,13 @@ public enum Genre {
     Genre(String code) {
         this.code = code;
     }
+
+    public static Genre getGenreByCode(String code) {
+        for (Genre value : Genre.values()) {
+            if (value.getCode().equals(code)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

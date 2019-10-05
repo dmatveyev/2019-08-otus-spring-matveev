@@ -1,36 +1,31 @@
-package ru.otus.spring01.library.dao;
+package ru.otus.spring01.library.dao.impl;
 
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.otus.spring01.library.dao.PersonDao;
 import ru.otus.spring01.library.domain.Person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings({"SqlNoDataSourceInspection", "ConstantConditions", "SqlDialectInspection"})
 @Repository
-public class PersonDaoJdbc implements PersonDao {
+public class PersonDaoImpl implements PersonDao {
 
-    private final JdbcOperations jdbc;
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public PersonDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations)
+    public PersonDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations)
     {
-        // Это просто отсавили, чтобы не переписывать код
-        // В идеале всё должно быть на NamedParameterJdbcOperations
-        this.jdbc = namedParameterJdbcOperations.getJdbcOperations();
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
 
     @Override
     public int count() {
-        return jdbc.queryForObject("select count(*) from persons", Integer.class);
+        return namedParameterJdbcOperations.queryForObject("select count(*) from persons", new HashMap<>(), Integer.class);
     }
 
     @Override
@@ -38,7 +33,7 @@ public class PersonDaoJdbc implements PersonDao {
         if (person.getId() == null) {
             person.setId(UUID.randomUUID());
         }
-        jdbc.update("insert into persons (id, `name`) values (?, ?)", person.getId(), person.getName());
+        namedParameterJdbcOperations.update("insert into persons (id, `name`) values (:id, :name)", new BeanPropertySqlParameterSource(person));
     }
 
     @Override
@@ -51,7 +46,7 @@ public class PersonDaoJdbc implements PersonDao {
 
     @Override
     public List<Person> getAll() {
-        return jdbc.query("select * from persons", new PersonMapper());
+        return namedParameterJdbcOperations.query("select * from persons", new PersonMapper());
     }
 
     @Override

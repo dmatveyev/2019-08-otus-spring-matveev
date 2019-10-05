@@ -12,9 +12,9 @@ public interface AuthorDao {
 
     void insert(Author author);
 
-    Person getById(UUID id);
+    Author getById(UUID id);
 
-    List<Person> getAll();
+    List<Author> getAll();
 
     void deleteById(UUID id);
 }
