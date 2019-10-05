@@ -63,27 +63,32 @@ public class AuthorDaoImpl implements AuthorDao {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
+            Author author = new Author();
+            List<Book> books = new ArrayList<>();
             UUID id = UUID.fromString(resultSet.getString("id"));
             String name = resultSet.getString("name");
-            Author author = new Author();
             author.setId(id);
             author.setName(name);
-            List<Book> books = new ArrayList<>();
-            while (resultSet.next()) {
-                String bookUuid = resultSet.getString(3);
-                String bookName = resultSet.getString(4);
-                String bookGenre = resultSet.getString(5);
-                String bookIsbn= resultSet.getString(6);
-                Book book = new Book();
-                book.setId(UUID.fromString(bookUuid));
-                book.setGenre(Genre.getGenreByCode(bookGenre));
-                book.setIsbn(bookIsbn);
-                book.setName(bookName);
-                book.setAuthor(author);
-                books.add(book);
+            mapBook(resultSet, author, books);
+            while(resultSet.next()) {
+                mapBook(resultSet, author, books);
             }
             author.setBooks(books);
             return author;
+        }
+
+        private void mapBook(ResultSet resultSet, Author author, List<Book> books) throws SQLException {
+            String bookUuid = resultSet.getString(3);
+            String bookName = resultSet.getString(4);
+            String bookGenre = resultSet.getString(5);
+            String bookIsbn = resultSet.getString(6);
+            Book book = new Book();
+            book.setId(UUID.fromString(bookUuid));
+            book.setGenre(Genre.getGenreByCode(bookGenre));
+            book.setIsbn(bookIsbn);
+            book.setName(bookName);
+            book.setAuthor(author);
+            books.add(book);
         }
     }
 }
