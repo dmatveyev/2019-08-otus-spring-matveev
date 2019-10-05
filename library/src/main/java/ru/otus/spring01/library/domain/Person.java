@@ -8,8 +8,4 @@ public class Person extends AbstractNameable{
         this.id = id;
         this.name = name;
     }
-
-    public String getName() {
-        return name;
-    }
 }

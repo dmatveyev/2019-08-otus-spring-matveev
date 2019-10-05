@@ -35,6 +35,9 @@ public class PersonDaoJdbc implements PersonDao {
 
     @Override
     public void insert(Person person) {
+        if (person.getId() == null) {
+            person.setId(UUID.randomUUID());
+        }
         jdbc.update("insert into persons (id, `name`) values (?, ?)", person.getId(), person.getName());
     }
 
@@ -52,7 +55,7 @@ public class PersonDaoJdbc implements PersonDao {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(UUID id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         namedParameterJdbcOperations.update(
                 "delete from persons where id = :id", params

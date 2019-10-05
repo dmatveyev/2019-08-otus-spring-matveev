@@ -1,4 +1,18 @@
 package ru.otus.spring01.library.domain;
 
-public class Genre extends AbstractNameable {
+import lombok.Getter;
+
+@Getter
+public enum Genre {
+
+    FANTASY("fantasy"),
+    ACTION("action"),
+    DETECTIVE("detective"),
+    FAIRY_TAILS("fairy_tails");
+
+    private String code;
+
+    Genre(String code) {
+        this.code = code;
+    }
 }
