@@ -53,6 +53,7 @@ public class App {
         System.out.println(bookDao.getByGenre(Genre.FANTASY));
         System.out.println(bookDao.getByISBN(book.getIsbn()));
         System.out.println(bookDao.getByNameLike("adve"));
+        System.out.println(authorDao.getAll());
         Console.main(args);
     }
 }

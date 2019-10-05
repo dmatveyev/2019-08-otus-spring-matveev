@@ -42,12 +42,13 @@ public class AuthorDaoImpl implements AuthorDao {
         return namedParameterJdbcOperations.queryForObject("select * from authors a " +
                         " left join books b on a.id = b.author_id " +
                         "where a.id = :id",
-                params, new AuthorMapper());
+                params, new AuthorWithBooksMapper());
     }
 
     @Override
     public List<Author> getAll() {
-        return namedParameterJdbcOperations.query("select * from authors a", new AuthorMapper());
+        return namedParameterJdbcOperations.query("select * from authors a " +
+                " left join books b on a.id = b.author_id ", new AuthorWithBooksMapper());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class AuthorDaoImpl implements AuthorDao {
         );
     }
 
-    private static class AuthorMapper implements RowMapper<Author> {
+    private static class AuthorWithBooksMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
