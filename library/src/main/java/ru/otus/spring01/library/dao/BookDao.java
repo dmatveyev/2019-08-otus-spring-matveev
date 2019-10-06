@@ -25,4 +25,6 @@ public interface BookDao {
     List<Book> getByAuthorName(String authorName);
 
     void deleteById(UUID id);
+
+    boolean containsBook(Book book);
 }

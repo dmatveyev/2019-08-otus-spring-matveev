@@ -101,6 +101,20 @@ public class BookDaoImpl implements BookDao {
         );
     }
 
+    @Override
+    public boolean containsBook(Book book) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("bookName", book.getName());
+        params.put("authorName", book.getAuthor().getName());
+        params.put("genre", book.getGenre().getCode());
+        Integer bookCount = namedParameterJdbcOperations.queryForObject(
+                "select count(b.*) from books b " +
+                        " left join authors a on a.id = b.author_id " +
+                        " where b.name = :bookName and a.name = :authorName and b.genre = :genre",
+                params, Integer.class);
+        return bookCount > 0;
+    }
+
     private class BookMapper implements RowMapper<Book> {
 
         @Override

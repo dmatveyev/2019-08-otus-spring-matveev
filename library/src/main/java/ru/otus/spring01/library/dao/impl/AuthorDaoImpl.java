@@ -82,13 +82,15 @@ public class AuthorDaoImpl implements AuthorDao {
             String bookName = resultSet.getString(4);
             String bookGenre = resultSet.getString(5);
             String bookIsbn = resultSet.getString(6);
-            Book book = new Book();
-            book.setId(UUID.fromString(bookUuid));
-            book.setGenre(Genre.getGenreByCode(bookGenre));
-            book.setIsbn(bookIsbn);
-            book.setName(bookName);
-            book.setAuthor(author);
-            books.add(book);
+            if (bookUuid != null) {
+                Book book = new Book();
+                book.setId(UUID.fromString(bookUuid));
+                book.setGenre(Genre.getGenreByCode(bookGenre));
+                book.setIsbn(bookIsbn);
+                book.setName(bookName);
+                book.setAuthor(author);
+                books.add(book);
+            }
         }
     }
 }
