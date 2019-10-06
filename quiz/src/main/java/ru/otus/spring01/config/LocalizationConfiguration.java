@@ -1,4 +1,4 @@
-package ru.otus.spring01.localization;
+package ru.otus.spring01.config;
 
 import lombok.Getter;
 import lombok.Setter;

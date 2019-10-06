@@ -1,0 +1,6 @@
+localization:
+  default-language: ru
+spring:
+  shell:
+    interactive:
+      enabled: false
