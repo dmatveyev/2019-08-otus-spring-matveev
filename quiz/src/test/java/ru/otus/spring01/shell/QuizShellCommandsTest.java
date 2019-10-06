@@ -50,7 +50,7 @@ class QuizShellCommandsTest {
     public void successUserLogin() {
         String user = "test";
         String loginCommand = String.format(LOGIN_WITH_CUSTOM_DATA, user, user);
-        String result = (String)shell.evaluate(() -> loginCommand);
+        String result = (String) shell.evaluate(() -> loginCommand);
         String localize = localizationService.localize(MessageConstants.GREETING,
                 user,
                 user);

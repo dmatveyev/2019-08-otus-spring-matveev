@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.otus.spring01.dao.QuestionDao;
 import ru.otus.spring01.dto.Question;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,28 +16,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class QuestionServiceTest {
 
     @Autowired
-    private QuestionDao questionDao;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Test
-    @DisplayName("Get all Questions")
-    public void getAllQuestion() {
-        List<Question> questions = questionDao.getQuestions();
-        assertNotNull(questions);
-        assertEquals(questionService.getCountQuestion(), questions.size());
-    }
 
     @Test
     @DisplayName("Get question by number")
     public void getQuestionByNumber() {
         int countQuestion = questionService.getCountQuestion();
-        int v = (int) (Math.random() * ++countQuestion - 1) + 1;
-        System.out.println(v);
-        Question questionByNumber = questionService.getQuestionByNumber(v);
-        assertEquals(v, questionByNumber.getQuestionNumber().intValue());
+        int questionNumber = (int) (Math.random() * ++countQuestion - 1) + 1;
+        Question questionByNumber = questionService.getQuestionByNumber(questionNumber);
+        assertEquals(questionNumber, questionByNumber.getQuestionNumber().intValue());
+    }
 
+    @Test
+    @DisplayName("Get next question")
+    public void getNextQuestion() {
+        Question nextQuestion = questionService.getNextQuestion();
+        assertNotNull(nextQuestion);
+        String correctAnswer = nextQuestion.getCorrectAnswer();
+        assertNotNull(correctAnswer);
+        Integer questionNumber = nextQuestion.getQuestionNumber();
+        assertEquals(1, questionNumber.intValue());
     }
 
 }
