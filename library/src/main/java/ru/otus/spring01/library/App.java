@@ -52,9 +52,9 @@ public class App {
         bookDao.insert(book1);
         System.out.println(bookDao.containsBook(book1));
         System.out.println(bookDao.getByGenre(Genre.FANTASY));
-        System.out.println(bookDao.getByISBN(book.getIsbn()));
+/*        System.out.println(bookDao.getByISBN(book.getIsbn()));
         System.out.println(bookDao.getByNameLike("adve"));
-        System.out.println(authorDao.getAll());
+        System.out.println(authorDao.getAll());*/
         Console.main(args);
     }
 }

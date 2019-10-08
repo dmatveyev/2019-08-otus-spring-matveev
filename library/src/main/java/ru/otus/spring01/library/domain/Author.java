@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class Author extends AbstractNameable {
         this.name = name;
     }
 
-    List<Book> books;
+    private List<Book> books = new ArrayList<>();
 
     @Override
     public String toString() {

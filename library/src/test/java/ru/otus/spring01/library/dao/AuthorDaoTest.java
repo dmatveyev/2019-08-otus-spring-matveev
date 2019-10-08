@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJdbcTest
 @ContextConfiguration(classes = DaoConfiguration.class)
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 class AuthorDaoTest {
 
     @Autowired
