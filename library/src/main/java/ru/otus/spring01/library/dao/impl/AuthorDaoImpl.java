@@ -24,7 +24,8 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public int count() {
-        return namedParameterJdbcOperations.queryForObject("select count(*) from authors", new HashMap<>(), Integer.class);
+        return namedParameterJdbcOperations.queryForObject(
+                "select count(*) from authors", new HashMap<>(), Integer.class);
     }
 
     @Override
