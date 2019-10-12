@@ -1,27 +1,23 @@
 package ru.otus.spring01.library.domain;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.UUID;
 
 @Getter
-public enum Genre {
+@Setter
+@ToString
+public class Genre {
 
-    FANTASY("fantasy"),
-    ACTION("action"),
-    DETECTIVE("detective"),
-    FAIRY_TAILS("fairy_tails");
+    private UUID id;
+
+    private String name;
 
     private String code;
 
-    Genre(String code) {
-        this.code = code;
-    }
-
-    public static Genre getGenreByCode(String code) {
-        for (Genre value : Genre.values()) {
-            if (value.getCode().equals(code)) {
-                return value;
-            }
-        }
-        return null;
+    public Genre() {
+        this.id = UUID.randomUUID();
     }
 }

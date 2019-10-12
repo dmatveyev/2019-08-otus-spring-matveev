@@ -1,11 +1,13 @@
 package ru.otus.spring01.library.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring01.library.dao.AuthorDao;
 import ru.otus.spring01.library.dao.BookDao;
+import ru.otus.spring01.library.dao.GenreDao;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
@@ -15,17 +17,14 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
 
     private final AuthorDao authorDao;
 
+    private final GenreDao genreDao;
+
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
-
-    public BookDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations, AuthorDao authorDao) {
-        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-        this.authorDao = authorDao;
-    }
-
     @Override
     public int count() {
         return namedParameterJdbcOperations.queryForObject("select count(*) from books", new HashMap<>(), Integer.class);
@@ -40,10 +39,10 @@ public class BookDaoImpl implements BookDao {
         params.put("id", book.getId());
         params.put("bookName", book.getName());
         params.put("author", book.getAuthor().getId());
-        params.put("genre", book.getGenre().getCode());
+        params.put("genre", book.getGenre().getId());
         params.put("isbn", book.getIsbn());
         namedParameterJdbcOperations.update(
-                "insert into books (id, `name`, genre, isbn, author_id) values (:id, :bookName, :genre, :isbn, :author)",
+                "insert into books (id, `name`, genre_id, isbn, author_id) values (:id, :bookName, :genre, :isbn, :author)",
                 params);
     }
 
@@ -82,9 +81,9 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getByGenre(Genre genre) {
-        Map<String, Object> params = Collections.singletonMap("genre", genre.getCode());
+        Map<String, Object> params = Collections.singletonMap("genre", genre.getId());
         return namedParameterJdbcOperations.query(
-                "select * from books where genre = :genre", params,  new BookMapper()
+                "select * from books where genre_id = :genre", params,  new BookMapper()
         );
     }
 
@@ -121,16 +120,20 @@ public class BookDaoImpl implements BookDao {
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
             UUID id = UUID.fromString(resultSet.getString("id"));
             String name = resultSet.getString("name");
-            String genre = resultSet.getString("genre");
+            String genreId = resultSet.getString("genre");
             String isbn = resultSet.getString("isbn");
-            String author = resultSet.getString("author_id");
+            String authorId = resultSet.getString("author_id");
             Book book = new Book();
             book.setId(id);
             book.setName(name);
             book.setIsbn(isbn);
-            book.setGenre(Genre.getGenreByCode(genre));
-            if (author != null) {
-                book.setAuthor(authorDao.getById(UUID.fromString(author)));
+            if (genreId != null) {
+                Genre genre = genreDao.getById(UUID.fromString(genreId));
+                book.setGenre(genre);
+            }
+            if (authorId != null) {
+                Author author = authorDao.getById(UUID.fromString(authorId));
+                book.setAuthor(author);
             }
             return book;
         }

@@ -34,6 +34,10 @@ public class App {
         Person ivan = dao.getById(id);
         System.out.println("Ivan id: " + ivan.getId() + " name: " + ivan.getName());
 
+        Genre fantasy = new Genre();
+        fantasy.setName("fantasy");
+        fantasy.setCode("001");
+
         Author author = new Author();
         author.setId(UUID.randomUUID());
         author.setName("Boris Akunin");
@@ -41,17 +45,17 @@ public class App {
         Book book = new Book();
         book.setName("Adventures");
         book.setAuthor(author);
-        book.setGenre(Genre.FANTASY);
+        book.setGenre(fantasy);
         book.setIsbn(isbnGenerator.generateNumber());
         bookDao.insert(book);
         Book book1 = new Book();
         book1.setName("Adventures 2");
         book1.setAuthor(author);
-        book1.setGenre(Genre.FANTASY);
+        book1.setGenre(fantasy);
         book1.setIsbn(isbnGenerator.generateNumber());
         bookDao.insert(book1);
         System.out.println(bookDao.containsBook(book1));
-        System.out.println(bookDao.getByGenre(Genre.FANTASY));
+        System.out.println(bookDao.getByGenre(fantasy));
 /*        System.out.println(bookDao.getByISBN(book.getIsbn()));
         System.out.println(bookDao.getByNameLike("adve"));
         System.out.println(authorDao.getAll());*/

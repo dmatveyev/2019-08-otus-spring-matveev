@@ -5,17 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring01.library.domain.Author;
+import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,39 +18,41 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJdbcTest
 @ContextConfiguration(classes = DaoConfiguration.class)
-class AuthorDaoTest {
+class GenreDaoTest {
 
     @Autowired
     private NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     @Autowired
-    private AuthorDao authorDao;
+    private GenreDao genreDao;
 
     private static final UUID id = UUID.randomUUID();
 
     @BeforeEach
     void setUp() {
-        Author author1 = new Author();
-        author1.setName("Denis");
-        author1.setId(id);
-        Author author2 = new Author();
-        author2.setName("Matveev");
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
-                new BeanPropertySqlParameterSource(author1));
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
-                new BeanPropertySqlParameterSource(author2));
+        Genre genre1 = new Genre();
+        genre1.setId(id);
+        genre1.setName("fantasy");
+        genre1.setCode("0001");
+        Genre genre2 = new Genre();
+        genre2.setName("action");
+        genre2.setCode("00002");
+        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
+                new BeanPropertySqlParameterSource(genre1));
+        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
+                new BeanPropertySqlParameterSource(genre2));
     }
 
     @Test
     @DisplayName("Check count method")
     void count() {
-        int count = authorDao.count();
+        int count = genreDao.count();
         assertEquals(2, count);
     }
 
     @Test
     void getById() {
-        Author byId = authorDao.getById(id);
+        Genre byId = genreDao.getById(id);
         assertNotNull(byId);
         assertEquals(id, byId.getId());
     }
@@ -64,23 +60,23 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Check getAll method")
     void getAll() {
-        List<Author> all = authorDao.getAll();
+        List<Genre> all = genreDao.getAll();
         assertNotNull(all);
         assertEquals(2, all.size());
     }
 
     @Test
     @DisplayName("Deleting Author without books")
-    void delete() {
+    void deleteWithoutBooks() {
         UUID id = UUID.randomUUID();
-        Author author = new Author();
-        author.setId(id);
-        author.setName("Test");
-        authorDao.insert(author);
-        Author byId = authorDao.getById(id);
+        Genre genre = new Genre();
+        genre.setId(id);
+        genre.setName("Test");
+        genreDao.insert(genre);
+        Genre byId = genreDao.getById(id);
         assertNotNull(byId);
-        authorDao.deleteById(id);
-        assertNull(authorDao.getById(id));
+        genreDao.deleteById(id);
+        assertNull(genreDao.getById(id));
     }
 
 }

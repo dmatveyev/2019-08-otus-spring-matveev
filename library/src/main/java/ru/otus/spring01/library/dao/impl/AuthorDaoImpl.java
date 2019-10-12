@@ -1,5 +1,6 @@
 package ru.otus.spring01.library.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -12,13 +13,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class AuthorDaoImpl implements AuthorDao {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
-
-    public AuthorDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations) {
-        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-    }
 
     @Override
     public int count() {
@@ -32,15 +30,17 @@ public class AuthorDaoImpl implements AuthorDao {
             author.setId(UUID.randomUUID());
         }
         namedParameterJdbcOperations.update(
-                "insert into authors (id, `name`) values (:id, :name)", new BeanPropertySqlParameterSource(author));
+                "insert into authors (id, `name`) values (:id, :name)",
+                new BeanPropertySqlParameterSource(author));
     }
 
     @Override
     public Author getById(UUID id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return namedParameterJdbcOperations.queryForObject("select * from authors a " +
+        List<Author> result = namedParameterJdbcOperations.query("select * from authors a " +
                         "where a.id = :id",
                 params, new AuthorMapper());
+        return result.isEmpty() ? null: result.get(0);
     }
 
     @Override
@@ -68,6 +68,5 @@ public class AuthorDaoImpl implements AuthorDao {
             author.setName(name);
             return author;
         }
-
     }
 }
