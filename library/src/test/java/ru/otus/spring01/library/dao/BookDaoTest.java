@@ -1,9 +1,6 @@
 package ru.otus.spring01.library.dao;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -21,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJdbcTest
 @ContextConfiguration(classes = DaoConfiguration.class)
+@DisplayName("Tests for Book Dao")
 class BookDaoTest {
 
     @Autowired
@@ -96,12 +94,14 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks count method")
     void count() {
         int count = bookDao.count();
         assertEquals(bookList.size(), count);
     }
 
     @Test
+    @DisplayName("Checks insertion")
     void insert() {
         Book newBook = new Book();
         newBook.setId(UUID.randomUUID());
@@ -115,6 +115,7 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks getting by id")
     void getById() {
         Book byId = bookDao.getById(book1.getId());
         assertEquals(book1.getIsbn(), byId.getIsbn());
@@ -127,12 +128,14 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks getting all books")
     void getAll() {
         List<Book> all = bookDao.getAll();
         assertEquals(bookList.size(), all.size());
     }
 
     @Test
+    @DisplayName("Checks get book by isbn")
     void getByISBN() {
         Book byISBN = bookDao.getByISBN(book1.getIsbn());
         assertEquals(book1.getId(), byISBN.getId());
@@ -141,12 +144,14 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks getting books by name")
     void getByNameLike() {
         List<Book> result = bookDao.getByNameLike("some");
         assertEquals(bookList.size(), result.size());
     }
 
     @Test
+    @DisplayName("Checks getting books by genre")
     void getByGenre() {
         List<Book> byGenre = bookDao.getByGenre(genre1);
         assertEquals(1, byGenre.size());
@@ -156,6 +161,7 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks getting books by author name")
     void getByAuthorName() {
         String name = book1.getAuthor().getName();
         List<Book> byAuthorName = bookDao.getByAuthorName(name);
@@ -164,6 +170,7 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks deletion book by id")
     void deleteById() {
         bookDao.deleteById(book1.getId());
         boolean contains = bookDao.contains(book1);
@@ -173,6 +180,7 @@ class BookDaoTest {
     }
 
     @Test
+    @DisplayName("Checks contains method")
     void containsBook() {
         boolean contains = bookDao.contains(book1);
         assertTrue(contains);

@@ -53,10 +53,15 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public void deleteById(UUID id) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
+    public void deleteById(UUID authorId) {
+        Map<String, Object> params = Collections.singletonMap("authorId", authorId);
+        Integer count = namedParameterJdbcOperations.queryForObject("select count(*) from books where author_id = :authorId",
+                params, Integer.class);
+        if(count > 0) {
+            throw new AuthorHasBookException("Author has books, which is user");
+        }
         namedParameterJdbcOperations.update(
-                "delete from authors where id = :id", params
+                "delete from authors where id = :authorId", params
         );
     }
 
