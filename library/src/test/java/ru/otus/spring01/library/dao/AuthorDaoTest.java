@@ -24,8 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJdbcTest
 @ContextConfiguration(classes = DaoConfiguration.class)
+@DisplayName("Tests for Author Dao")
 class AuthorDaoTest {
 
+    public static final String FIRST_TEST_NAME = "Denis";
+    public static final String SECOND_TEST_NAME = "Matveev";
     @Autowired
     private NamedParameterJdbcOperations namedParameterJdbcOperations;
 
@@ -37,10 +40,10 @@ class AuthorDaoTest {
     @BeforeEach
     void setUp() {
         Author author1 = new Author();
-        author1.setName("Denis");
+        author1.setName(FIRST_TEST_NAME);
         author1.setId(id);
         Author author2 = new Author();
-        author2.setName("Matveev");
+        author2.setName(SECOND_TEST_NAME);
         namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
                 new BeanPropertySqlParameterSource(author1));
         namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
@@ -48,13 +51,14 @@ class AuthorDaoTest {
     }
 
     @Test
-    @DisplayName("Check count method")
+    @DisplayName("Checks count method")
     void count() {
         int count = authorDao.count();
         assertEquals(2, count);
     }
 
     @Test
+    @DisplayName("Checks getById method")
     void getById() {
         Author byId = authorDao.getById(id);
         assertNotNull(byId);
@@ -62,7 +66,7 @@ class AuthorDaoTest {
     }
 
     @Test
-    @DisplayName("Check getAll method")
+    @DisplayName("Checks getAll method")
     void getAll() {
         List<Author> all = authorDao.getAll();
         assertNotNull(all);
@@ -70,7 +74,7 @@ class AuthorDaoTest {
     }
 
     @Test
-    @DisplayName("Deleting Author without books")
+    @DisplayName("Checks deleting Author without books")
     void delete() {
         UUID id = UUID.randomUUID();
         Author author = new Author();
@@ -83,4 +87,23 @@ class AuthorDaoTest {
         assertNull(authorDao.getById(id));
     }
 
+    @Test
+    @DisplayName("Checks contains method")
+    void contains() {
+        Author author = new Author();
+        author.setName(FIRST_TEST_NAME);
+        boolean contains = authorDao.contains(author);
+        assertTrue(contains);
+    }
+
+    @Test
+    @DisplayName("Checks that duplicate author won't be inserted")
+    void nonInsertDuplicate(){
+        Author author = new Author();
+        author.setName(FIRST_TEST_NAME);
+        authorDao.insert(author);
+        Author byId = authorDao.getById(id);
+        assertNotNull(byId);
+        assertEquals(2, authorDao.count());
+    }
 }

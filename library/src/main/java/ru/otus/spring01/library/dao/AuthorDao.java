@@ -17,4 +17,6 @@ public interface AuthorDao {
     List<Author> getAll();
 
     void deleteById(UUID id);
+
+    boolean contains(Author author);
 }

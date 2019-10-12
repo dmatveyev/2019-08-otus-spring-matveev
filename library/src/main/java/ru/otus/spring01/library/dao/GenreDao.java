@@ -18,4 +18,6 @@ public interface GenreDao {
     void deleteById(UUID id);
 
     Genre getByName(String name);
+
+    boolean contains(Genre genre);
 }

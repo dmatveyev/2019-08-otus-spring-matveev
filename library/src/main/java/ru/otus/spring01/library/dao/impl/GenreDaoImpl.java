@@ -28,9 +28,11 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public void insert(Genre genre) {
-        namedParameterJdbcOperations.update("insert into genres " +
-                " (id, `name`, code) values (:id, :name, :code)",
-                new BeanPropertySqlParameterSource(genre));
+        if (!contains(genre)) {
+            namedParameterJdbcOperations.update("insert into genres " +
+                            " (id, `name`, code) values (:id, :name, :code)",
+                    new BeanPropertySqlParameterSource(genre));
+        }
     }
 
     @Override
@@ -40,7 +42,7 @@ public class GenreDaoImpl implements GenreDao {
         List<Genre> result = namedParameterJdbcOperations.query("select * from genres where id = :id",
                 params,
                 new GenreMapper());
-        return result.isEmpty() ? null: result.get(0);
+        return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class GenreDaoImpl implements GenreDao {
         if (booksByGenre > 0) {
             throw new GenreHasBookException("There are any books by this genre");
         }
-        namedParameterJdbcOperations.update("delete from genres where id = :genreId", params );
+        namedParameterJdbcOperations.update("delete from genres where id = :genreId", params);
     }
 
     @Override
@@ -68,7 +70,20 @@ public class GenreDaoImpl implements GenreDao {
                 param,
                 new GenreMapper());
 
-        return result.isEmpty() ? null: result.get(0);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Override
+    public boolean contains(Genre genre) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", genre.getName());
+        params.put("code", genre.getCode());
+        Integer integer = namedParameterJdbcOperations.queryForObject("select count(*) from genres " +
+                        "where name = :name " +
+                        "and code = :code",
+                params,
+                Integer.class);
+        return integer > 0;
     }
 
     private static class GenreMapper implements RowMapper<Genre> {

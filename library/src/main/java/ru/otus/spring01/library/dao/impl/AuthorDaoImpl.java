@@ -26,6 +26,9 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void insert(Author author) {
+        if (contains(author)) {
+            return;
+        }
         if (author.getId() == null) {
             author.setId(UUID.randomUUID());
         }
@@ -55,6 +58,15 @@ public class AuthorDaoImpl implements AuthorDao {
         namedParameterJdbcOperations.update(
                 "delete from authors where id = :id", params
         );
+    }
+
+    @Override
+    public boolean contains(Author author) {
+        Map<String, String> params = Collections.singletonMap("name", author.getName());
+        Integer integer = namedParameterJdbcOperations.queryForObject("select count(*) from authors where name = :name",
+                params,
+                Integer.class);
+        return integer > 0;
     }
 
     private static class AuthorMapper implements RowMapper<Author> {
