@@ -1,5 +1,6 @@
 package ru.otus.spring01.library.dao;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,10 +9,9 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.test.context.ContextConfiguration;
-import ru.otus.spring01.library.domain.Author;
-import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,31 +22,40 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Tests for Genre Dao")
 class GenreDaoTest {
 
-    public static final String FIRST_TEST_NAME = "fantasy";
-    public static final String FIRST_TEST_CODE = "0001";
-    public static final String SECOND_TEST_NAME = "action";
-    public static final String SECOND_TEST_CODE = "00002";
+    private static final String FIRST_TEST_NAME = "fantasy";
+    private static final String FIRST_TEST_CODE = "0001";
+    private static final String SECOND_TEST_NAME = "action";
+    private static final String SECOND_TEST_CODE = "00002";
+    private static final UUID id = UUID.randomUUID();
+
     @Autowired
     private NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     @Autowired
     private GenreDao genreDao;
 
-    private static final UUID id = UUID.randomUUID();
+    private Genre genre1;
+    private Genre genre2;
 
     @BeforeEach
     void setUp() {
-        Genre genre1 = new Genre();
+        genre1 = new Genre();
         genre1.setId(id);
         genre1.setName(FIRST_TEST_NAME);
         genre1.setCode(FIRST_TEST_CODE);
-        Genre genre2 = new Genre();
+        genre2 = new Genre();
         genre2.setName(SECOND_TEST_NAME);
         genre2.setCode(SECOND_TEST_CODE);
         namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
                 new BeanPropertySqlParameterSource(genre1));
         namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
                 new BeanPropertySqlParameterSource(genre2));
+    }
+
+    @AfterEach
+    void tearDown() {
+        namedParameterJdbcOperations.update("delete from genres where id is not null ",
+                Collections.emptyMap());
     }
 
     @Test
@@ -75,15 +84,9 @@ class GenreDaoTest {
     @Test
     @DisplayName("Deleting Genre without books")
     void deleteWithoutBooks() {
-        UUID id = UUID.randomUUID();
-        Genre genre = new Genre();
-        genre.setId(id);
-        genre.setName("Test");
-        genreDao.insert(genre);
-        Genre byId = genreDao.getById(id);
-        assertNotNull(byId);
-        genreDao.deleteById(id);
+        genreDao.deleteById(genre1.getId());
         assertNull(genreDao.getById(id));
+        assertEquals(1, genreDao.count());
     }
 
     @Test
@@ -98,7 +101,7 @@ class GenreDaoTest {
 
     @Test
     @DisplayName("Checks that duplicate genre won't be inserted")
-    void nonInsertDuplicate(){
+    void nonInsertDuplicate() {
         Genre genre = new Genre();
         genre.setName(FIRST_TEST_NAME);
         genre.setCode(FIRST_TEST_CODE);

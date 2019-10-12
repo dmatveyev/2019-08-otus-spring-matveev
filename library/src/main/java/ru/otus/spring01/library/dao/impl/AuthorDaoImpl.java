@@ -21,7 +21,7 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public int count() {
         return namedParameterJdbcOperations.queryForObject(
-                "select count(*) from authors", new HashMap<>(), Integer.class);
+                "select count(*) from authors", Collections.emptyMap(), Integer.class);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AuthorDaoImpl implements AuthorDao {
         List<Author> result = namedParameterJdbcOperations.query("select * from authors a " +
                         "where a.id = :id",
                 params, new AuthorMapper());
-        return result.isEmpty() ? null: result.get(0);
+        return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
