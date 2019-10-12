@@ -24,7 +24,6 @@ class AuthorDaoTest {
 
     private static final String FIRST_TEST_NAME = "Denis";
     private static final String SECOND_TEST_NAME = "Matveev";
-    private static final UUID id = UUID.randomUUID();
 
     @Autowired
     private NamedParameterJdbcOperations namedParameterJdbcOperations;
@@ -39,7 +38,6 @@ class AuthorDaoTest {
     void setUp() {
         author1 = new Author();
         author1.setName(FIRST_TEST_NAME);
-        author1.setId(id);
         author2 = new Author();
         author2.setName(SECOND_TEST_NAME);
         namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
@@ -64,6 +62,7 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Checks getById method")
     void getById() {
+        UUID id = author1.getId();
         Author byId = authorDao.getById(id);
         assertNotNull(byId);
         assertEquals(id, byId.getId());
@@ -80,7 +79,8 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Checks deleting Author without books")
     void delete() {
-        authorDao.deleteById(author1.getId());
+        UUID id = author1.getId();
+        authorDao.deleteById(id);
         assertNull(authorDao.getById(id));
         assertEquals(1, authorDao.count());
     }
@@ -100,7 +100,7 @@ class AuthorDaoTest {
         Author author = new Author();
         author.setName(FIRST_TEST_NAME);
         authorDao.insert(author);
-        Author byId = authorDao.getById(id);
+        Author byId = authorDao.getById(author1.getId());
         assertNotNull(byId);
         assertEquals(2, authorDao.count());
     }

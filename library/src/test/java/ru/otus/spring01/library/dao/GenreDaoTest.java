@@ -26,7 +26,6 @@ class GenreDaoTest {
     private static final String FIRST_TEST_CODE = "0001";
     private static final String SECOND_TEST_NAME = "action";
     private static final String SECOND_TEST_CODE = "00002";
-    private static final UUID id = UUID.randomUUID();
 
     @Autowired
     private NamedParameterJdbcOperations namedParameterJdbcOperations;
@@ -40,7 +39,6 @@ class GenreDaoTest {
     @BeforeEach
     void setUp() {
         genre1 = new Genre();
-        genre1.setId(id);
         genre1.setName(FIRST_TEST_NAME);
         genre1.setCode(FIRST_TEST_CODE);
         genre2 = new Genre();
@@ -68,6 +66,7 @@ class GenreDaoTest {
     @Test
     @DisplayName("Check getById method")
     void getById() {
+        UUID id = genre1.getId();
         Genre byId = genreDao.getById(id);
         assertNotNull(byId);
         assertEquals(id, byId.getId());
@@ -84,7 +83,8 @@ class GenreDaoTest {
     @Test
     @DisplayName("Deleting Genre without books")
     void deleteWithoutBooks() {
-        genreDao.deleteById(genre1.getId());
+        UUID id = genre1.getId();
+        genreDao.deleteById(id);
         assertNull(genreDao.getById(id));
         assertEquals(1, genreDao.count());
     }
@@ -106,9 +106,16 @@ class GenreDaoTest {
         genre.setName(FIRST_TEST_NAME);
         genre.setCode(FIRST_TEST_CODE);
         genreDao.insert(genre);
-        Genre byId = genreDao.getById(id);
+        Genre byId = genreDao.getById(genre1.getId());
         assertNotNull(byId);
         assertEquals(2, genreDao.count());
+    }
+
+    @Test
+    @DisplayName("Checks getByName")
+    void getByName() {
+        Genre byName = genreDao.getByName(genre1.getName());
+        assertEquals(genre1.getId(), byName.getId());
     }
 
 }

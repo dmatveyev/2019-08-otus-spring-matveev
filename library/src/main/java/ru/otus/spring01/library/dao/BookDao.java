@@ -26,5 +26,5 @@ public interface BookDao {
 
     void deleteById(UUID id);
 
-    boolean containsBook(Book book);
+    boolean contains(Book book);
 }

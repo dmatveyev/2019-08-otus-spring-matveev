@@ -6,6 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:application-test.yaml")
-@ComponentScan("ru.otus.spring01.library.dao")
+@ComponentScan({"ru.otus.spring01.library.dao", "ru.otus.spring01.library.service"})
 public class DaoConfiguration {
 }

@@ -32,6 +32,9 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void insert(Book book) {
+        if (contains(book)) {
+            return;
+        }
         if (book.getId() == null) {
             book.setId(UUID.randomUUID());
         }
@@ -48,25 +51,26 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book getById(UUID id) {
-        Book book = new Book();
-        book.setId(id);
-        return namedParameterJdbcOperations.queryForObject("select * from book b " +
-                        "where a.id = :id",
-                new BeanPropertySqlParameterSource(book), Book.class);
+        Map<String, UUID> params = Collections.singletonMap("id", id);
+        List<Book> result = namedParameterJdbcOperations.query("select * from books b " +
+                        "where b.id = :id",
+                params, new BookMapper());
+        return result.isEmpty() ? null: result.get(0);
 
     }
 
     @Override
     public List<Book> getAll() {
-        return namedParameterJdbcOperations.query("select * from authors a", new BookMapper());
+        return namedParameterJdbcOperations.query("select * from books a", new BookMapper());
     }
 
     @Override
     public Book getByISBN(String isbn) {
         Map<String, Object> params = Collections.singletonMap("isbn", isbn);
-        return namedParameterJdbcOperations.queryForObject(
-                "select * from books where isbn = :isbn", params,  new BookMapper()
+        List<Book> books = namedParameterJdbcOperations.query(
+                "select * from books where isbn = :isbn", params, new BookMapper()
         );
+        return books.isEmpty()? null: books.get(0);
     }
 
     @Override
@@ -89,7 +93,10 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getByAuthorName(String authorName) {
-        return null;
+        Map<String, String> params = Collections.singletonMap("authorName", authorName);
+        return namedParameterJdbcOperations.query("select b.* from books b " +
+                "left join authors a on b.author_id = a.id " +
+                "where a.name = :authorName", params, new BookMapper());
     }
 
     @Override
@@ -101,15 +108,17 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public boolean containsBook(Book book) {
+    public boolean contains(Book book) {
         Map<String, Object> params = new HashMap<>();
         params.put("bookName", book.getName());
         params.put("authorName", book.getAuthor().getName());
-        params.put("genre", book.getGenre().getCode());
+        params.put("genreId", book.getGenre().getId());
+        params.put("isbn", book.getIsbn());
         Integer bookCount = namedParameterJdbcOperations.queryForObject(
                 "select count(b.*) from books b " +
                         " left join authors a on a.id = b.author_id " +
-                        " where b.name = :bookName and a.name = :authorName and b.genre = :genre",
+                        " where b.name = :bookName and a.name = :authorName and b.genre_id = :genreId " +
+                        "and b.isbn = :isbn",
                 params, Integer.class);
         return bookCount > 0;
     }
@@ -120,7 +129,7 @@ public class BookDaoImpl implements BookDao {
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
             UUID id = UUID.fromString(resultSet.getString("id"));
             String name = resultSet.getString("name");
-            String genreId = resultSet.getString("genre");
+            String genreId = resultSet.getString("genre_id");
             String isbn = resultSet.getString("isbn");
             String authorId = resultSet.getString("author_id");
             Book book = new Book();
