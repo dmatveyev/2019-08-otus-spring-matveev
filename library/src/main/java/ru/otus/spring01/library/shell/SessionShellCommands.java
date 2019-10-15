@@ -8,17 +8,18 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring01.library.dao.PersonDao;
 import ru.otus.spring01.library.domain.Person;
+import ru.otus.spring01.library.service.Session;
 
 @ShellComponent
 @RequiredArgsConstructor
-public class LibraryShellCommands {
+public class SessionShellCommands {
 
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String LOGOUT = "logout";
-    private final PersonDao personDao;
 
-    private boolean isLogined = false;
+    private final PersonDao personDao;
+    private final Session session;
 
     @ShellMethod(key = LOGIN, value = "login")
     public String login(String login, String password) {
@@ -29,7 +30,7 @@ public class LibraryShellCommands {
         Person newPerson = new Person(login);
         newPerson.setPassword(password);
         personDao.insert(newPerson);
-        isLogined = true;
+        session.setLogined(true);
         return "Hello " + login;
     }
 
@@ -47,20 +48,20 @@ public class LibraryShellCommands {
 
     @ShellMethod(key = LOGOUT, value = "Logout")
     public String logout() {
-        isLogined = false;
+        session.setLogined(false);
         return "GoodBye!!";
     }
 
     @ShellMethodAvailability({LOGIN, REGISTER})
     public Availability registerAvailability() {
-        return isLogined
+        return session.isLogined()
                 ? Availability.unavailable("You are logined")
                 : Availability.available();
     }
 
     @ShellMethodAvailability({LOGOUT})
     public Availability logoutAvailability() {
-        return isLogined
+        return session.isLogined()
                 ? Availability.available()
                 : Availability.unavailable("You aren't logined");
     }
