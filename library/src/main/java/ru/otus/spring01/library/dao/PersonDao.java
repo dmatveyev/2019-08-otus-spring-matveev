@@ -15,4 +15,6 @@ public interface PersonDao {
     List<Person> getAll();
 
     void deleteById(UUID id);
+
+    Person getByUserAndName(String name, String password);
 }

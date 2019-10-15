@@ -33,7 +33,8 @@ public class PersonDaoImpl implements PersonDao {
         if (person.getId() == null) {
             person.setId(UUID.randomUUID());
         }
-        namedParameterJdbcOperations.update("insert into persons (id, `name`) values (:id, :name)", new BeanPropertySqlParameterSource(person));
+        namedParameterJdbcOperations.update("insert into persons (id, `name`, password) " +
+                "values (:id, :name, :password)", new BeanPropertySqlParameterSource(person));
     }
 
     @Override
@@ -57,13 +58,28 @@ public class PersonDaoImpl implements PersonDao {
         );
     }
 
+    @Override
+    public Person getByUserAndName(String name, String password) {
+        Map<String, Object> params = new HashMap<>();
+                params.put("name", name);
+                params.put("password", password);
+        List<Person> result = namedParameterJdbcOperations.query(
+                "select * from persons where name = :name " +
+                        "and password = :password", params, new PersonMapper()
+        );
+        return result.isEmpty() ? null: result.get(0);
+    }
+
     private static class PersonMapper implements RowMapper<Person> {
 
         @Override
         public Person mapRow(ResultSet resultSet, int i) throws SQLException {
             UUID id = UUID.fromString(resultSet.getString("id"));
             String name = resultSet.getString("name");
-            return new Person(id, name);
+            String password = resultSet.getString("password");
+            Person person = new Person(id, name);
+            person.setPassword(password);
+            return person;
         }
     }
 
