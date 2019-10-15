@@ -10,7 +10,10 @@ import ru.otus.spring01.library.domain.Author;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -57,7 +60,7 @@ public class AuthorDaoImpl implements AuthorDao {
         Map<String, Object> params = Collections.singletonMap("authorId", authorId);
         Integer count = namedParameterJdbcOperations.queryForObject("select count(*) from books where author_id = :authorId",
                 params, Integer.class);
-        if(count > 0) {
+        if (count > 0) {
             throw new AuthorHasBookException("Author has books, which is user");
         }
         namedParameterJdbcOperations.update(
@@ -72,6 +75,17 @@ public class AuthorDaoImpl implements AuthorDao {
                 params,
                 Integer.class);
         return integer > 0;
+    }
+
+    @Override
+    public Author getByName(String name) {
+        Map<String, String> param = Collections.singletonMap("name", name);
+
+        List<Author> result = namedParameterJdbcOperations.query("select * from authors where `name` = :name ",
+                param,
+                new AuthorMapper());
+
+        return result.isEmpty() ? null : result.get(0);
     }
 
     private static class AuthorMapper implements RowMapper<Author> {
