@@ -23,6 +23,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BookShellCommands {
 
+    public static final String ADD_BOOK = "addBook";
+    public static final String BOOK_BY_NAME = "bookByName";
+    public static final String REMOVE_BOOK = "removeBook";
     private final Session session;
     private final BookDao bookDao;
     private final AuthorDao authorDao;
@@ -30,7 +33,7 @@ public class BookShellCommands {
     private final ISBNGenerator isbnGenerator;
 
 
-    @ShellMethod(key = "addBook", value = "Adding book to library")
+    @ShellMethod(key = ADD_BOOK, value = "Adding book to library")
     public String addBook(String name, String genreName, String authorName) {
         Genre genre = genreDao.getByName(genreName);
         if (Objects.isNull(genre)) {
@@ -49,12 +52,12 @@ public class BookShellCommands {
         return "Book was added";
     }
 
-    @ShellMethod(key = "bookByName", value = "Gets book list by name")
+    @ShellMethod(key = BOOK_BY_NAME, value = "Gets book list by name")
     public List<Book> getBookByName(String bookName) {
         return bookDao.getByNameLike(bookName);
     }
 
-    @ShellMethod(key ="removeBook", value = "Removes book by isbn")
+    @ShellMethod(key = REMOVE_BOOK, value = "Removes book by isbn")
     public String removeBook(String isbn) {
         Book book = bookDao.getByISBN(isbn);
         if (Objects.nonNull(book)) {

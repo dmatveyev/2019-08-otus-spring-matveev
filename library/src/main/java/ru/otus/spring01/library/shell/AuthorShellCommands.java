@@ -17,16 +17,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorShellCommands {
 
+    public static final String COUNT_AUTHORS = "countAuthors";
+    public static final String CREATE_AUTHOR = "createAuthor";
+    public static final String DELETE_AUTHOR = "deleteAuthor";
     private final Session session;
     private final AuthorDao authorDao;
     private final BookDao bookDao;
 
-    @ShellMethod(key = "countAuthors", value = "get Authors count")
+    @ShellMethod(key = COUNT_AUTHORS, value = "get Authors count")
     public int getAuthorCount() {
         return authorDao.count();
     }
 
-    @ShellMethod(key = "createAuthor", value = "Creating new Author")
+    @ShellMethod(key = CREATE_AUTHOR, value = "Creating new Author")
     public String createAuthor(String name) {
         Author author = new Author();
         author.setName(name);
@@ -37,7 +40,7 @@ public class AuthorShellCommands {
         return "Created";
     }
 
-    @ShellMethod(key = "deleteAuthor", value = "Deleting author")
+    @ShellMethod(key = DELETE_AUTHOR, value = "Deleting author")
     public String deleteAuthor(String name) {
         Author byName = authorDao.getByName(name);
         if (byName == null) {

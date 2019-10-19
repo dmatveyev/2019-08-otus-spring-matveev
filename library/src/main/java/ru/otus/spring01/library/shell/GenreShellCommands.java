@@ -17,16 +17,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreShellCommands {
 
+    public static final String COUNT_GENRES = "countGenres";
+    public static final String CREATE_GENRE = "createGenre";
+    public static final String GENRES = "genres";
+    public static final String DELETE_GENRE = "deleteGenre";
     private final Session session;
     private final GenreDao genreDao;
     private final BookDao bookDao;
 
-    @ShellMethod(key = "countGenres", value = "Get genres count")
+    @ShellMethod(key = COUNT_GENRES, value = "Get genres count")
     public int getGenreCount() {
         return genreDao.getAll().size();
     }
 
-    @ShellMethod(key = "createGenre", value = "Creating new Genre")
+    @ShellMethod(key = CREATE_GENRE, value = "Creating new Genre")
     public String createGenre(@ShellOption String name, @ShellOption String code) {
         Genre genre = new Genre();
         genre.setName(name);
@@ -38,12 +42,12 @@ public class GenreShellCommands {
         return "Created";
     }
 
-    @ShellMethod(key = "genres", value = "List genres")
+    @ShellMethod(key = GENRES, value = "List genres")
     public List<Genre> genres() {
         return genreDao.getAll();
     }
 
-    @ShellMethod(key = "deleteGenre", value = "Delete genre by name")
+    @ShellMethod(key = DELETE_GENRE, value = "Delete genre by name")
     public String delete(String name) {
         Genre byName = genreDao.getByName(name);
         if (byName == null) {
