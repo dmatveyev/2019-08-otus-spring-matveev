@@ -5,28 +5,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import ru.otus.spring01.library.domain.Author;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJdbcTest
-@ContextConfiguration(classes = DaoConfiguration.class)
+@DataJpaTest
 @DisplayName("Tests for Author Dao")
+@Import(AuthorDaoImpl.class)
 class AuthorDaoTest {
 
     private static final String FIRST_TEST_NAME = "Denis";
     private static final String SECOND_TEST_NAME = "Matveev";
 
     @Autowired
-    private NamedParameterJdbcOperations namedParameterJdbcOperations;
+    private TestEntityManager testEntityManager;
 
     @Autowired
     private AuthorDao authorDao;
@@ -40,23 +38,21 @@ class AuthorDaoTest {
         author1.setName(FIRST_TEST_NAME);
         author2 = new Author();
         author2.setName(SECOND_TEST_NAME);
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
-                new BeanPropertySqlParameterSource(author1));
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) values (:id, :name)",
-                new BeanPropertySqlParameterSource(author2));
+        testEntityManager.persist(author1);
+        testEntityManager.persist(author2);
     }
 
     @AfterEach
     void tearDown() {
-        namedParameterJdbcOperations.update("delete from authors where id is not null ",
-                Collections.emptyMap());
+        testEntityManager.remove(author1);
+        testEntityManager.remove(author2);
     }
 
     @Test
     @DisplayName("Checks count method")
     void count() {
-        int count = authorDao.count();
-        assertEquals(2, count);
+        Long count = authorDao.count();
+        assertEquals(Long.valueOf(2), count);
     }
 
     @Test
@@ -82,7 +78,7 @@ class AuthorDaoTest {
         UUID id = author1.getId();
         authorDao.deleteById(id);
         assertNull(authorDao.getById(id));
-        assertEquals(1, authorDao.count());
+        assertEquals(Long.valueOf(1), authorDao.count());
     }
 
     @Test
@@ -102,6 +98,6 @@ class AuthorDaoTest {
         authorDao.insert(author);
         Author byId = authorDao.getById(author1.getId());
         assertNotNull(byId);
-        assertEquals(2, authorDao.count());
+        assertEquals(Long.valueOf(2), authorDao.count());
     }
 }

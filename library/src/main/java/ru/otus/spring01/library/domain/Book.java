@@ -3,19 +3,26 @@ package ru.otus.spring01.library.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 public class Book {
 
     private UUID id;
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "AUTHOR_ID")
     private Author author;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GENRE_ID")
     private Genre genre;
 
+    @Column(name = "ISBN")
     private String isbn;
 
     public Book() {

@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
+@Entity
 @AllArgsConstructor
 public class Genre {
 
@@ -17,6 +20,7 @@ public class Genre {
 
     private String name;
 
+    @Column(name = "CODE")
     private String code;
 
     public Genre() {

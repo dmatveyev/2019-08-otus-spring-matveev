@@ -10,7 +10,7 @@ public class ISBNGenerator {
 
     private Random random;
 
-    private ISBNGenerator () {
+    public ISBNGenerator () {
         random = new Random();
     }
 

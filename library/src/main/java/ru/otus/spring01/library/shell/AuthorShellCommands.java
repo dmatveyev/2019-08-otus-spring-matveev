@@ -25,7 +25,7 @@ public class AuthorShellCommands {
     private final BookDao bookDao;
 
     @ShellMethod(key = COUNT_AUTHORS, value = "get Authors count")
-    public int getAuthorCount() {
+    public Long getAuthorCount() {
         return authorDao.count();
     }
 
