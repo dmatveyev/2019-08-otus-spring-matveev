@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.test.context.ContextConfiguration;
-import ru.otus.spring01.library.dao.impl.AuthorHasBookException;
+import ru.otus.spring01.library.exception.AuthorHasBookException;
 import ru.otus.spring01.library.dao.impl.GenreHasBookException;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring01.library.dao.AuthorDao;
 import ru.otus.spring01.library.domain.Author;
+import ru.otus.spring01.library.exception.AuthorHasBookException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

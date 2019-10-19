@@ -43,7 +43,7 @@ public class SessionShellCommands {
         Person newPerson = new Person(login);
         newPerson.setPassword(password);
         personDao.insert(newPerson);
-        return "Hello " + login;
+        return "Registered newUser " + login;
     }
 
     @ShellMethod(key = LOGOUT, value = "Logout")
