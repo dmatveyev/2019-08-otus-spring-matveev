@@ -2,26 +2,30 @@ package ru.otus.spring01.library.dao;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import ru.otus.spring01.library.dao.impl.BookDaoImpl;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 import ru.otus.spring01.library.service.ISBNGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJdbcTest
+@DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 @DisplayName("Tests for Book Dao")
+@Import({BookDaoImpl.class})
 class BookDaoTest {
 
     @Autowired
-    private NamedParameterJdbcOperations namedParameterJdbcOperations;
+    private TestEntityManager testEntityManager;
 
     @Autowired
     private BookDao bookDao;
@@ -67,36 +71,25 @@ class BookDaoTest {
         book1.setIsbn(isbnGenerator.generateNumber());
         book2.setIsbn(isbnGenerator.generateNumber());
 
-        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) " +
-                "values(:id, :name, :code)", new BeanPropertySqlParameterSource(genre1));
-        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) " +
-                "values(:id, :name, :code)", new BeanPropertySqlParameterSource(genre2));
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) " +
-                "values(:id, :name, )", new BeanPropertySqlParameterSource(author));
-        bookList.forEach(book -> {
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", book.getId());
-            params.put("name", book.getName());
-            params.put("isbn", book.getIsbn());
-            params.put("genreId", book.getGenre().getId());
-            params.put("authorId", book.getAuthor().getId());
-            namedParameterJdbcOperations.update("insert into books (id, `name`, genre_id, isbn, author_id) " +
-                    "values(:id, :name, :genreId, :isbn, :authorId)", params);
-        });
+        testEntityManager.persist(author);
+        testEntityManager.persist(genre1);
+        testEntityManager.persist(genre2);
+        bookList.forEach(testEntityManager::persist);
     }
 
     @AfterEach
     void tearDown() {
-        namedParameterJdbcOperations.update("delete from books where id is not null", Collections.emptyMap());
-        namedParameterJdbcOperations.update("delete from genres where id is not null", Collections.emptyMap());
-        namedParameterJdbcOperations.update("delete from authors where id is not null", Collections.emptyMap());
+        testEntityManager.remove(author);
+        testEntityManager.remove(genre1);
+        testEntityManager.remove(genre2);
+        bookList.forEach(testEntityManager::remove);
     }
 
     @Test
     @DisplayName("Checks count method")
     void count() {
-        int count = bookDao.count();
-        assertEquals(bookList.size(), count);
+        Long count = bookDao.count();
+        assertEquals(Long.valueOf(bookList.size()), count);
     }
 
     @Test
@@ -106,7 +99,7 @@ class BookDaoTest {
         newBook.setGenre(book1.getGenre());
         newBook.setAuthor(book1.getAuthor());
         bookDao.insert(newBook);
-        assertEquals(bookList.size(), bookDao.count());
+        assertEquals(Long.valueOf(bookList.size()), bookDao.count());
 
     }
 
@@ -171,8 +164,8 @@ class BookDaoTest {
         bookDao.deleteById(book1.getId());
         boolean contains = bookDao.contains(book1);
         assertFalse(contains);
-        int count = bookDao.count();
-        assertEquals(bookList.size() - 1, count);
+        Long count = bookDao.count();
+        assertEquals(Long.valueOf(bookList.size() - 1), count);
     }
 
     @Test
