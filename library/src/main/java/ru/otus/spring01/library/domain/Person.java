@@ -7,8 +7,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Person extends AbstractNameable {
+public class Person {
 
+    private UUID id;
+    private String name;
     private String password;
 
     public Person(String name) {

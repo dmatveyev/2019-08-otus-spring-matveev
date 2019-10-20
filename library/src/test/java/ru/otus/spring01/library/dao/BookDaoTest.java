@@ -103,10 +103,7 @@ class BookDaoTest {
     @Test
     @DisplayName("Checks insertion")
     void insert() {
-        Book newBook = new Book();
-        newBook.setId(UUID.randomUUID());
-        newBook.setName(book1.getName());
-        newBook.setIsbn(book1.getIsbn());
+        Book newBook = new Book(UUID.randomUUID(), book1.getName(), book1.getIsbn());
         newBook.setGenre(book1.getGenre());
         newBook.setAuthor(book1.getAuthor());
         bookDao.insert(newBook);

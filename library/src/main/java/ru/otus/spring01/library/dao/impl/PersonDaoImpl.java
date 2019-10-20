@@ -18,8 +18,7 @@ public class PersonDaoImpl implements PersonDao {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
-    public PersonDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations)
-    {
+    public PersonDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
 
@@ -61,13 +60,13 @@ public class PersonDaoImpl implements PersonDao {
     @Override
     public Person getByUserAndName(String name, String password) {
         Map<String, Object> params = new HashMap<>();
-                params.put("name", name);
-                params.put("password", password);
+        params.put("name", name);
+        params.put("password", password);
         List<Person> result = namedParameterJdbcOperations.query(
                 "select * from persons where name = :name " +
                         "and password = :password", params, new PersonMapper()
         );
-        return result.isEmpty() ? null: result.get(0);
+        return result.isEmpty() ? null : result.get(0);
     }
 
     private static class PersonMapper implements RowMapper<Person> {
