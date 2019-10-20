@@ -1,102 +1,89 @@
 package ru.otus.spring01.library.dao.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring01.library.dao.GenreDao;
+import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 import ru.otus.spring01.library.exception.GenreHasBookException;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Repository
-@RequiredArgsConstructor
 public class GenreDaoImpl implements GenreDao {
 
-    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    public int count() {
-        return namedParameterJdbcOperations.queryForObject("select count(*) from GENRES",
-                new HashMap<>(), Integer.class);
+    public Long count() {
+        return entityManager.createQuery("select count(g) from Genre g", Long.class)
+                .getSingleResult();
     }
 
     @Override
     public void insert(Genre genre) {
         if (!contains(genre)) {
-            namedParameterJdbcOperations.update("insert into genres " +
-                            " (id, `name`, code) values (:id, :name, :code)",
-                    new BeanPropertySqlParameterSource(genre));
+            entityManager.persist(genre);
         }
     }
 
     @Override
     public Genre getById(UUID id) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
-
-        List<Genre> result = namedParameterJdbcOperations.query("select * from genres where id = :id",
-                params,
-                new GenreMapper());
+        List<Genre> result = entityManager.createQuery("select g from Genre g " +
+                "where g.id = :id", Genre.class)
+                .setParameter("id", id)
+                .getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
     public List<Genre> getAll() {
-        return namedParameterJdbcOperations.query("select * from genres",
-                new GenreMapper());
+        return entityManager.createQuery("select g from Genre g", Genre.class)
+                .getResultList();
     }
 
     @Override
     public void deleteById(UUID id) {
         Map<String, Object> params = Collections.singletonMap("genreId", id);
-        Integer booksByGenre = namedParameterJdbcOperations.queryForObject("select count(*) from books where genre_id = :genreId",
-                params, Integer.class);
-        if (booksByGenre > 0) {
+        List<Book> booksByGenre = entityManager.createQuery("select b from Book b " +
+                        "where b.genre.id = :genreId",
+                Book.class)
+                .setParameter("genreId", id)
+                .getResultList();
+        if (booksByGenre.size() > 0) {
             throw new GenreHasBookException("There are any books by this genre");
         }
-        namedParameterJdbcOperations.update("delete from genres where id = :genreId", params);
+        entityManager.createQuery("delete from Genre where id = :genreId")
+                .setParameter("genreId", id)
+                .executeUpdate();
     }
 
     @Override
     public Genre getByName(String name) {
         Map<String, String> param = Collections.singletonMap("name", name);
 
-        List<Genre> result = namedParameterJdbcOperations.query("select * from genres where `name` = :name ",
-                param,
-                new GenreMapper());
+        List<Genre> result = entityManager.createQuery("select g from Genre g" +
+                " where g.name = :name ", Genre.class)
+                .setParameter("name", name)
+                .getResultList();
 
         return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
     public boolean contains(Genre genre) {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", genre.getName());
-        params.put("code", genre.getCode());
-        Integer integer = namedParameterJdbcOperations.queryForObject("select count(*) from genres " +
-                        "where name = :name " +
-                        "and code = :code",
-                params,
-                Integer.class);
-        return integer > 0;
-    }
-
-    private static class GenreMapper implements RowMapper<Genre> {
-
-        @Override
-        public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
-            Genre genre = new Genre();
-            UUID id = UUID.fromString(resultSet.getString("id"));
-            String name = resultSet.getString("name");
-            String code = resultSet.getString("code");
-            genre.setId(id);
-            genre.setName(name);
-            genre.setCode(code);
-            return genre;
-        }
+        List<Genre> resultList = entityManager.createQuery("select g from Genre g " +
+                "where g.name = :name " +
+                "and g.code = :code", Genre.class)
+                .setParameter("name", genre.getName())
+                .setParameter("code", genre.getCode())
+                .setMaxResults(1)
+                .getResultList();
+        return resultList.size() > 0;
     }
 }

@@ -5,21 +5,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import ru.otus.spring01.library.dao.impl.GenreDaoImpl;
 import ru.otus.spring01.library.domain.Genre;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJdbcTest
+@DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 @DisplayName("Tests for Genre Dao")
+@Import(GenreDaoImpl.class)
 class GenreDaoTest {
 
     private static final String FIRST_TEST_NAME = "fantasy";
@@ -28,7 +29,7 @@ class GenreDaoTest {
     private static final String SECOND_TEST_CODE = "00002";
 
     @Autowired
-    private NamedParameterJdbcOperations namedParameterJdbcOperations;
+    private TestEntityManager testEntityManager;
 
     @Autowired
     private GenreDao genreDao;
@@ -44,23 +45,21 @@ class GenreDaoTest {
         genre2 = new Genre();
         genre2.setName(SECOND_TEST_NAME);
         genre2.setCode(SECOND_TEST_CODE);
-        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
-                new BeanPropertySqlParameterSource(genre1));
-        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) values (:id, :name, :code)",
-                new BeanPropertySqlParameterSource(genre2));
+        testEntityManager.persist(genre1);
+        testEntityManager.persist(genre2);
     }
 
     @AfterEach
     void tearDown() {
-        namedParameterJdbcOperations.update("delete from genres where id is not null ",
-                Collections.emptyMap());
+        testEntityManager.remove(genre1);
+        testEntityManager.remove(genre2);
     }
 
     @Test
     @DisplayName("Check count method")
     void count() {
-        int count = genreDao.count();
-        assertEquals(4, count);
+        Long count = genreDao.count();
+        assertEquals(Long.valueOf(4), count);
     }
 
     @Test
@@ -86,7 +85,7 @@ class GenreDaoTest {
         UUID id = genre1.getId();
         genreDao.deleteById(id);
         assertNull(genreDao.getById(id));
-        assertEquals(3, genreDao.count());
+        assertEquals(Long.valueOf(3), genreDao.count());
     }
 
     @Test
@@ -108,7 +107,7 @@ class GenreDaoTest {
         genreDao.insert(genre);
         Genre byId = genreDao.getById(genre1.getId());
         assertNotNull(byId);
-        assertEquals(4, genreDao.count());
+        assertEquals(Long.valueOf(4), genreDao.count());
     }
 
     @Test
