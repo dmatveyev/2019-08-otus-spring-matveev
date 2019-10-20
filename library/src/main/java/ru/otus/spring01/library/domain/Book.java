@@ -11,7 +11,11 @@ import java.util.UUID;
 @Entity
 public class Book {
 
+    @Id
+    @Column(name = "ID")
     private UUID id;
+
+    @Column(name = "name")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -3,7 +3,9 @@ package ru.otus.spring01.library.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +16,14 @@ import java.util.UUID;
 @Entity
 public class Author {
 
+    @Id
+    @Column(name = "ID")
     private UUID id;
+    @Column(name = "NAME")
     private String name;
+
+    @OneToMany
+    private List<Book> books = new ArrayList<>();
 
     public Author() {
         this.id = UUID.randomUUID();
@@ -25,9 +33,6 @@ public class Author {
         this.id = id;
         this.name = name;
     }
-
-    @OneToMany
-    private List<Book> books = new ArrayList<>();
 
     @Override
     public String toString() {

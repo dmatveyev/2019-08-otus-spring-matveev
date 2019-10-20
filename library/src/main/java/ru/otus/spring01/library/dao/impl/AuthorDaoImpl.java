@@ -1,6 +1,7 @@
-package ru.otus.spring01.library.dao;
+package ru.otus.spring01.library.dao.impl;
 
 import org.springframework.stereotype.Repository;
+import ru.otus.spring01.library.dao.AuthorDao;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.exception.AuthorHasBookException;
 

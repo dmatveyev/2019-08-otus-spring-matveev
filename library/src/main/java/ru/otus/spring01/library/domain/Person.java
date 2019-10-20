@@ -2,10 +2,10 @@ package ru.otus.spring01.library.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +13,10 @@ import java.util.UUID;
 @Entity
 public class Person {
 
+    @Id
+    @Column(name = "ID")
     private UUID id;
+    @Column(name = "NAME")
     private String name;
 
     @Column(name = "PASSWORD")
