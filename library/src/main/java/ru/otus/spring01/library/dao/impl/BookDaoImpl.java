@@ -2,12 +2,9 @@ package ru.otus.spring01.library.dao.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
-import ru.otus.spring01.library.dao.AuthorDao;
 import ru.otus.spring01.library.dao.BookDao;
-import ru.otus.spring01.library.dao.GenreDao;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
@@ -19,10 +16,6 @@ import java.util.*;
 @Repository
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
-
-    private final AuthorDao authorDao;
-
-    private final GenreDao genreDao;
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
