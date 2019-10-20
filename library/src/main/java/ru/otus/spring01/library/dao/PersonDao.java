@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PersonDao {
-    int count();
+    Long count();
 
     void insert(Person person);
 
