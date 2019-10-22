@@ -123,14 +123,16 @@ public class BookDaoImpl implements BookDao {
         params.put("authorName", book.getAuthor().getName());
         params.put("genreId", book.getGenre().getId());
         params.put("isbn", book.getIsbn());
-        List<Book> result = namedParameterJdbcOperations.query(
-                "select top 1 * from books b " +
+        List<String> result = namedParameterJdbcOperations.query(
+                "select 1 from books b where exists(select b.id from books b" +
                         " left join authors a on a.id = b.author_id " +
                         " left join genres g on g.id = b.genre_id" +
                         " where b.name = :bookName and a.name = :authorName and b.genre_id = :genreId " +
-                        "and b.isbn = :isbn ",
-                params, new BookMapper());
-        return !result.isEmpty();
+                        "and b.isbn = :isbn )",
+                params,
+                (resultSet, integer) -> resultSet.getString(1));
+
+        return result.size() > 0;
     }
 
     private class BookMapper implements RowMapper<Book> {

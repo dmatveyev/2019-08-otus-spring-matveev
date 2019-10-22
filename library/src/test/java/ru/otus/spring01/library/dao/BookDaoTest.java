@@ -2,7 +2,6 @@ package ru.otus.spring01.library.dao;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -181,5 +180,7 @@ class BookDaoTest {
     void containsBook() {
         boolean contains = bookDao.contains(book1);
         assertTrue(contains);
+        book2.setIsbn("1");
+        assertFalse(bookDao.contains(book2));
     }
 }

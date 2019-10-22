@@ -60,7 +60,7 @@ class GenreDaoTest {
     @DisplayName("Check count method")
     void count() {
         int count = genreDao.count();
-        assertEquals(2, count);
+        assertEquals(4, count);
     }
 
     @Test
@@ -77,7 +77,7 @@ class GenreDaoTest {
     void getAll() {
         List<Genre> all = genreDao.getAll();
         assertNotNull(all);
-        assertEquals(2, all.size());
+        assertEquals(4, all.size());
     }
 
     @Test
@@ -86,7 +86,7 @@ class GenreDaoTest {
         UUID id = genre1.getId();
         genreDao.deleteById(id);
         assertNull(genreDao.getById(id));
-        assertEquals(1, genreDao.count());
+        assertEquals(3, genreDao.count());
     }
 
     @Test
@@ -108,7 +108,7 @@ class GenreDaoTest {
         genreDao.insert(genre);
         Genre byId = genreDao.getById(genre1.getId());
         assertNotNull(byId);
-        assertEquals(2, genreDao.count());
+        assertEquals(4, genreDao.count());
     }
 
     @Test
