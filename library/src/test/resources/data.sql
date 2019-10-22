@@ -1,0 +1,2 @@
+insert into genres (id, `name`, code) values ('1cc9b82f-b3d5-4b1b-a3f9-eafc32dd6fa9', 'fantasy1', '0003')
+insert into genres (id, `name`, code) values ('67953367-7369-4458-b14c-1456a1d345a2', 'action1', '00004')
