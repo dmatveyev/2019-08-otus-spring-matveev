@@ -173,7 +173,9 @@ class BookDaoTest {
     void containsBook() {
         boolean contains = bookDao.contains(book1);
         assertTrue(contains);
-        book2.setIsbn("1");
-        assertFalse(bookDao.contains(book2));
+        Book anotherBook = new Book(UUID.randomUUID(),"123", "123");
+        anotherBook.setAuthor(author);
+        anotherBook.setGenre(genre1);
+        assertFalse(bookDao.contains(anotherBook));
     }
 }
