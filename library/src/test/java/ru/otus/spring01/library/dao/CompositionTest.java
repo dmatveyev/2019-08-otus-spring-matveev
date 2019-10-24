@@ -19,8 +19,6 @@ import ru.otus.spring01.library.exception.AuthorHasBookException;
 import ru.otus.spring01.library.exception.GenreHasBookException;
 import ru.otus.spring01.library.service.ISBNGenerator;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
@@ -58,7 +56,6 @@ public class CompositionTest {
         book.setGenre(genre);
         book.setName("Cool detective");
 
-        author.setBooks(Collections.singletonList(book));
     }
 
     @BeforeEach

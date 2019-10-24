@@ -110,8 +110,8 @@ public class BookDaoImpl implements BookDao {
     public boolean contains(Book book) {
         List<Book> result = entityManager.createQuery(
                 "select b from Book b " +
-                        " left join b.author " +
-                        " left join b.genre " +
+                        " join fetch b.author " +
+                        " join fetch b.genre " +
                         " where b.name = :bookName and b.author.name = :authorName " +
                         "and b.genre.id = :genreId " +
                         "and b.isbn = :isbn ", Book.class)

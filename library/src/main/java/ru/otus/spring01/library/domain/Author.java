@@ -3,10 +3,7 @@ package ru.otus.spring01.library.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +19,7 @@ public class Author {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "author")
     private List<Book> books = new ArrayList<>();
 
     public Author() {

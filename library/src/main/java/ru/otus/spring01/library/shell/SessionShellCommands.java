@@ -27,9 +27,6 @@ public class SessionShellCommands {
         if (byUserAndName == null) {
             return "Please insert correct login or password";
         }
-        Person newPerson = new Person(login);
-        newPerson.setPassword(password);
-        personDao.insert(newPerson);
         session.setLogined(true);
         return "Hello " + login;
     }

@@ -22,6 +22,8 @@ public class Person {
     @Column(name = "PASSWORD")
     private String password;
 
+    public Person() {}
+
     public Person(String name) {
         this.id = UUID.randomUUID();
         this.name = name;

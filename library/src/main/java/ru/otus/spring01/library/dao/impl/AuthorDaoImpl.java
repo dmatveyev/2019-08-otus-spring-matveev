@@ -46,7 +46,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> getAll() {
-        List<Author> resultList = entityManager.createQuery("select a from Author a " +
+        List<Author> resultList = entityManager.createQuery("select distinct a from Author a " +
                 " left join a.books", Author.class)
                 .getResultList();
         return resultList;
