@@ -15,10 +15,11 @@ public class Book {
     @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "NAME")
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "AUTHOR_ID")
     private Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)

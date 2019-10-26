@@ -36,8 +36,8 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book getById(UUID id) {
         List<Book> result = entityManager.createQuery("select b from Book b " +
-                        "left join b.author " +
-                        "left join b.genre " +
+                        "join fetch b.author " +
+                        "join fetch b.genre " +
                         "where b.id = :id",
                 Book.class)
                 .setParameter("id", id)
@@ -49,8 +49,8 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> getAll() {
         return entityManager.createQuery("select b from Book b " +
-                        "left join b.author " +
-                        "left join b.genre",
+                        "join fetch b.author " +
+                        "join fetch b.genre",
                 Book.class)
                 .getResultList();
     }
@@ -59,8 +59,8 @@ public class BookDaoImpl implements BookDao {
     public Book getByISBN(String isbn) {
         List<Book> books = entityManager.createQuery(
                 "select b from Book b " +
-                        "left join b.author " +
-                        "left join b.genre " +
+                        "join fetch b.author " +
+                        "join fetch b.genre " +
                         "where isbn = :isbn", Book.class
         ).setParameter("isbn", isbn)
                 .getResultList();
@@ -70,8 +70,9 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> getByNameLike(String nameLike) {
         nameLike = ("%" + nameLike + "%").toLowerCase();
-        return entityManager.createQuery("select b from Book b " +                         "left join b.author " +
-                "left join b.genre " +
+        return entityManager.createQuery("select b from Book b " +
+                "join fetch b.author " +
+                "join fetch b.genre " +
                 "where LOWER(b.name) like :nameLike", Book.class)
                 .setParameter("nameLike", nameLike)
                 .getResultList();
@@ -81,8 +82,8 @@ public class BookDaoImpl implements BookDao {
     public List<Book> getByGenre(Genre genre) {
         return entityManager.createQuery(
                 "select b from Book b " +
-                        "left join b.author " +
-                        "left join b.genre " +
+                        "join fetch b.author " +
+                        "join fetch b.genre " +
                         "where b.genre.name = :genre", Book.class)
                 .setParameter("genre", genre.getName())
                 .getResultList();
@@ -91,8 +92,8 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> getByAuthorName(String authorName) {
         return entityManager.createQuery("select b from Book b " +
-                "left join b.author " +
-                "left join b.genre " +
+                "join fetch b.author " +
+                "join fetch b.genre " +
                 "where b.author.name = :authorName", Book.class)
                 .setParameter("authorName", authorName)
                 .getResultList();
