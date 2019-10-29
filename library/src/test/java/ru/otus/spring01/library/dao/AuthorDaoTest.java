@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
-import ru.otus.spring01.library.dao.impl.AuthorDaoImpl;
 import ru.otus.spring01.library.domain.Author;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import static ru.otus.spring01.library.dao.TestConstants.FIRST_AUTHOR_NAME;
 
 @DataJpaTest
 @DisplayName("Tests for Author Dao")
-@Import(AuthorDaoImpl.class)
 class AuthorDaoTest {
 
     @Autowired
@@ -45,7 +42,7 @@ class AuthorDaoTest {
     @Test
     @DisplayName("Checks getAll method")
     void getAll() {
-        List<Author> all = authorDao.getAll();
+        List<Author> all = authorDao.findAll();
         assertNotNull(all);
         assertEquals(2, all.size());
     }
@@ -55,18 +52,16 @@ class AuthorDaoTest {
     void delete() {
         Author author = new Author(UUID.randomUUID(), "testname");
         testEntityManager.persist(author);
-        assertTrue(authorDao.contains(author));
+        assertTrue(authorDao.existsByName(author.getName()));
         authorDao.deleteById(author.getId());
         assertNull(authorDao.getById(author.getId()));
-        assertEquals(Long.valueOf(2), authorDao.count());
+        assertEquals(2, authorDao.count());
     }
 
     @Test
     @DisplayName("Checks contains method")
     void contains() {
-        Author author = new Author();
-        author.setName(FIRST_AUTHOR_NAME);
-        boolean contains = authorDao.contains(author);
+        boolean contains = authorDao.existsByName(FIRST_AUTHOR_NAME);
         assertTrue(contains);
     }
 
@@ -75,9 +70,11 @@ class AuthorDaoTest {
     void nonInsertDuplicate() {
         Author author = new Author();
         author.setName(FIRST_AUTHOR_NAME);
-        authorDao.insert(author);
-        Author byId = authorDao.getById(FIRST_AUTHOR_ID);
-        assertNotNull(byId);
-        assertEquals(Long.valueOf(2), authorDao.count());
+        assertThrows(Exception.class, () -> {
+            authorDao.save(author);
+            Author byId = authorDao.getById(FIRST_AUTHOR_ID);
+            assertNotNull(byId);
+            assertEquals(2, authorDao.count());
+        });
     }
 }

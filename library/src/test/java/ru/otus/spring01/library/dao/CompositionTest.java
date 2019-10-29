@@ -14,11 +14,10 @@ import ru.otus.spring01.library.dao.impl.BookDaoImpl;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
-import ru.otus.spring01.library.exception.AuthorHasBookException;
-import ru.otus.spring01.library.exception.GenreHasBookException;
 import ru.otus.spring01.library.service.ISBNGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
@@ -68,11 +67,17 @@ public class CompositionTest {
 
     @Test
     void deletingGenreUsedInBooks() {
-        assertThrows(GenreHasBookException.class, () -> genreDao.deleteById(genre.getId()));
+        assertThrows(Exception.class, () -> {
+            genreDao.deleteById(genre.getId());
+            assertTrue(genreDao.existsById(genre.getId()));
+        });
     }
 
     @Test
     void deletingAuthorUsedInBooks() {
-        assertThrows(AuthorHasBookException.class, () -> authorDao.deleteById(author.getId()));
+        assertThrows(Exception.class, () -> {
+            authorDao.deleteById(author.getId());
+            assertTrue(authorDao.existsById(author.getId()));
+        });
     }
 }
