@@ -11,7 +11,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.dao.impl.AuthorDaoImpl;
 import ru.otus.spring01.library.dao.impl.BookDaoImpl;
-import ru.otus.spring01.library.dao.impl.GenreDaoImpl;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
-@Import({AuthorDaoImpl.class, BookDaoImpl.class, GenreDaoImpl.class})
+@Import({AuthorDaoImpl.class, BookDaoImpl.class,})
 public class CompositionTest {
 
     private static Author author;

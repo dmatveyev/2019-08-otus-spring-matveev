@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
-import ru.otus.spring01.library.dao.impl.GenreDaoImpl;
 import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 @DisplayName("Tests for Genre Dao")
-@Import(GenreDaoImpl.class)
 class GenreDaoTest {
 
     private static final UUID FIRST_ID = UUID.fromString("1cc9b82f-b3d5-4b1b-a3f9-eafc32dd6fa9");
@@ -53,7 +50,7 @@ class GenreDaoTest {
     @Test
     @DisplayName("Check getAll method")
     void getAll() {
-        List<Genre> all = genreDao.getAll();
+        List<Genre> all = genreDao.findAll();
         assertNotNull(all);
         assertEquals(2, all.size());
     }
@@ -65,11 +62,11 @@ class GenreDaoTest {
         genre.setName(FIRST_TEST_NAME + "1");
         genre.setCode(FIRST_TEST_CODE + "1");
         testEntityManager.persist(genre);
-        assertTrue(genreDao.contains(genre));
-        assertEquals(Long.valueOf(3), genreDao.count());
+        assertTrue(genreDao.existsById(genre.getId()));
+        assertEquals(3, genreDao.count());
         genreDao.deleteById(genre.getId());
         assertNull(genreDao.getById(genre.getId()));
-        assertEquals(Long.valueOf(2), genreDao.count());
+        assertEquals(2, genreDao.count());
     }
 
     @Test
@@ -78,7 +75,7 @@ class GenreDaoTest {
         Genre genre = new Genre();
         genre.setName(FIRST_TEST_NAME);
         genre.setCode(FIRST_TEST_CODE);
-        boolean contains = genreDao.contains(genre);
+        boolean contains = genreDao.existsByNameAndCode(genre.getName(), genre.getCode());
         assertTrue(contains);
     }
 
@@ -88,10 +85,12 @@ class GenreDaoTest {
         Genre genre = new Genre();
         genre.setName(FIRST_TEST_NAME);
         genre.setCode(FIRST_TEST_CODE);
-        genreDao.insert(genre);
-        Genre byId = genreDao.getById(FIRST_ID);
-        assertNotNull(byId);
-        assertEquals(Long.valueOf(2), genreDao.count());
+        assertThrows(Exception.class, () -> {
+            genreDao.save(genre);
+            Genre byId = genreDao.getById(FIRST_ID);
+            assertNotNull(byId);
+            assertEquals(2, genreDao.count());
+        });
     }
 
     @Test

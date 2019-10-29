@@ -27,7 +27,7 @@ public class GenreShellCommands {
 
     @ShellMethod(key = COUNT_GENRES, value = "Get genres count")
     public int getGenreCount() {
-        return genreDao.getAll().size();
+        return genreDao.findAll().size();
     }
 
     @ShellMethod(key = CREATE_GENRE, value = "Creating new Genre")
@@ -35,16 +35,16 @@ public class GenreShellCommands {
         Genre genre = new Genre();
         genre.setName(name);
         genre.setCode(code);
-        if (genreDao.contains(genre)) {
+        if (genreDao.existsById(genre.getId())) {
             return "Genre is contained";
         }
-        genreDao.insert(genre);
+        genreDao.save(genre);
         return "Created";
     }
 
     @ShellMethod(key = GENRES, value = "List genres")
     public List<Genre> genres() {
-        return genreDao.getAll();
+        return genreDao.findAll();
     }
 
     @ShellMethod(key = DELETE_GENRE, value = "Delete genre by name")

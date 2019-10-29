@@ -23,7 +23,7 @@ public class SessionShellCommands {
 
     @ShellMethod(key = LOGIN, value = "login")
     public String login(String login, String password) {
-        Person byUserAndName = personDao.getByUserAndName(login, password);
+        Person byUserAndName = personDao.getByNameAndPassword(login, password);
         if (byUserAndName == null) {
             return "Please insert correct login or password";
         }
@@ -33,13 +33,13 @@ public class SessionShellCommands {
 
     @ShellMethod(key = REGISTER, value = "Register new User")
     public String register(@ShellOption String login, @ShellOption String password) {
-        Person byUserAndName = personDao.getByUserAndName(login, password);
+        Person byUserAndName = personDao.getByNameAndPassword(login, password);
         if (byUserAndName != null) {
             return "User is ....";
         }
         Person newPerson = new Person(login);
         newPerson.setPassword(password);
-        personDao.insert(newPerson);
+        personDao.save(newPerson);
         return "Registered newUser " + login;
     }
 

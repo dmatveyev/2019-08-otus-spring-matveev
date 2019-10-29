@@ -1,20 +1,19 @@
 package ru.otus.spring01.library.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import ru.otus.spring01.library.domain.Person;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface PersonDao {
-    Long count();
+public interface PersonDao extends CrudRepository<Person, UUID> {
+    long count();
 
-    void insert(Person person);
+    Person save(Person person);
 
     Person getById(UUID id);
 
-    List<Person> getAll();
+    List<Person> findAll();
 
-    void deleteById(UUID id);
-
-    Person getByUserAndName(String name, String password);
+    Person getByNameAndPassword(String name, String password);
 }
