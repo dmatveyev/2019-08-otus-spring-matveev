@@ -48,18 +48,18 @@ public class BookShellCommands {
         book.setName(name);
         book.setGenre(genre);
         book.setAuthor(author);
-        bookDao.insert(book);
+        bookDao.save(book);
         return "Book was added";
     }
 
     @ShellMethod(key = BOOK_BY_NAME, value = "Gets book list by name")
     public List<Book> getBookByName(String bookName) {
-        return bookDao.getByNameLike(bookName);
+        return bookDao.getByNameContainingIgnoreCase(bookName);
     }
 
     @ShellMethod(key = REMOVE_BOOK, value = "Removes book by isbn")
     public String removeBook(String isbn) {
-        Book book = bookDao.getByISBN(isbn);
+        Book book = bookDao.getByIsbn(isbn);
         if (Objects.nonNull(book)) {
             bookDao.deleteById(book.getId());
             return "Removed";

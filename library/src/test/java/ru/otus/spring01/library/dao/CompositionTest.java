@@ -6,11 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import ru.otus.spring01.library.dao.impl.AuthorDaoImpl;
-import ru.otus.spring01.library.dao.impl.BookDaoImpl;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
@@ -21,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
-@Import({AuthorDaoImpl.class, BookDaoImpl.class,})
 public class CompositionTest {
 
     private static Author author;

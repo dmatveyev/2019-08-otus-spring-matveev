@@ -1,23 +1,24 @@
 package ru.otus.spring01.library.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface BookDao {
-    Long count();
+public interface BookDao extends CrudRepository<Book, UUID> {
+    long count();
 
-    void insert(Book book);
+    Book save(Book book);
 
     Book getById(UUID id);
 
-    List<Book> getAll();
+    List<Book> findAll();
 
-    Book getByISBN(String isbn);
+    Book getByIsbn(String isbn);
 
-    List<Book> getByNameLike(String nameLike);
+    List<Book> getByNameContainingIgnoreCase(String nameLike);
 
     List<Book> getByGenre(Genre genre);
 
@@ -25,5 +26,5 @@ public interface BookDao {
 
     void deleteById(UUID id);
 
-    boolean contains(Book book);
+    boolean existsByNameAndGenreNameAndAuthorName(String bookName, String genreName, String authorName);
 }
