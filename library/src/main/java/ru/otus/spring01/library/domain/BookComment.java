@@ -2,28 +2,24 @@ package ru.otus.spring01.library.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
+@Document(collection = "BookComments")
 public class BookComment {
 
     @Id
-    @Column(name = "ID")
     private UUID id = UUID.randomUUID();
 
-    @ManyToOne
     private Person person;
 
-    @ManyToOne
     private Book book;
 
-    @Column(name = "COMMENT")
-    @Lob
     private String comment;
 
 

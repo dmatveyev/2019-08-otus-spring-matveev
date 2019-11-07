@@ -4,27 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
-@Entity
+@Document(collection = "Genres")
 @AllArgsConstructor
 public class Genre {
 
     @Id
-    @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "CODE")
     private String code;
 
     public Genre() {

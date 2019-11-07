@@ -2,24 +2,22 @@ package ru.otus.spring01.library.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Entity
+@Document(collection = "Authors")
 public class Author {
 
     @Id
-    @Column(name = "ID")
     private UUID id;
-    @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "author")
     private List<Book> books = new ArrayList<>();
 
     public Author() {

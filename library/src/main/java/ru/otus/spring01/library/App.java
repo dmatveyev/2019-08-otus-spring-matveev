@@ -1,13 +1,12 @@
 package ru.otus.spring01.library;
 
 import lombok.SneakyThrows;
-import org.h2.tools.Console;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableMongoRepositories
 public class App {
 
     @SneakyThrows
@@ -15,6 +14,5 @@ public class App {
 
         SpringApplication.run(App.class);
 
-        Console.main(args);
     }
 }
