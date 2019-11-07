@@ -19,7 +19,7 @@ public class GenreShellCommands {
 
     public static final String COUNT_GENRES = "countGenres";
     public static final String CREATE_GENRE = "createGenre";
-    public static final String GENRES = "genres";
+    public static final String GENRES = "getGenres";
     public static final String DELETE_GENRE = "deleteGenre";
     private final Session session;
     private final GenreDao genreDao;
@@ -43,7 +43,7 @@ public class GenreShellCommands {
     }
 
     @ShellMethod(key = GENRES, value = "List genres")
-    public List<Genre> genres() {
+    public List<Genre> getGenres() {
         return genreDao.findAll();
     }
 

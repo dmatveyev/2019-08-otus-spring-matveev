@@ -70,6 +70,10 @@ class BookDaoTest {
     void getAll() {
         List<Book> all = bookDao.findAll();
         assertEquals(2, all.size());
+        all.forEach(book -> {
+            assertNotNull(book.getGenre());
+            assertNotNull(book.getAuthor());
+        });
     }
 
     @Test

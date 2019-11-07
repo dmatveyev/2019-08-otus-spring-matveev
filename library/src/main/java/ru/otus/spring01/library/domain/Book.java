@@ -9,6 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@NamedEntityGraph(name = "book.genres.authors", attributeNodes = { @NamedAttributeNode("author"),
+@NamedAttributeNode("genre")})
 public class Book {
 
     @Id
