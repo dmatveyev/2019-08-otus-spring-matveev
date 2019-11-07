@@ -1,24 +1,22 @@
 package ru.otus.spring01.library.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import ru.otus.spring01.library.domain.Author;
-import ru.otus.spring01.library.domain.Person;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface AuthorDao {
+public interface AuthorDao extends CrudRepository<Author, UUID> {
 
-    int count();
-
-    void insert(Author author);
+    Author save(Author author);
 
     Author getById(UUID id);
 
-    List<Author> getAll();
+    List<Author> findAll();
 
     void deleteById(UUID id);
 
-    boolean contains(Author author);
+    boolean existsByName(String name);
 
     Author getByName(String name);
 }

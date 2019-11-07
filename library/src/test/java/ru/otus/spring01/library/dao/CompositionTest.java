@@ -1,28 +1,22 @@
 package ru.otus.spring01.library.dao;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import ru.otus.spring01.library.exception.AuthorHasBookException;
-import ru.otus.spring01.library.exception.GenreHasBookException;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 import ru.otus.spring01.library.service.ISBNGenerator;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJdbcTest
+@DataJpaTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 public class CompositionTest {
 
@@ -40,7 +34,7 @@ public class CompositionTest {
     private ISBNGenerator isbnGenerator;
 
     @Autowired
-    private NamedParameterJdbcOperations namedParameterJdbcOperations;
+    private TestEntityManager testEntityManager;
 
     @BeforeAll
     static void createDate() {
@@ -56,41 +50,30 @@ public class CompositionTest {
         book.setGenre(genre);
         book.setName("Cool detective");
 
-        author.setBooks(Collections.singletonList(book));
     }
 
     @BeforeEach
+    @Rollback
     void setUp() {
         book.setIsbn(isbnGenerator.generateNumber());
-        namedParameterJdbcOperations.update("insert into authors (id, `name`) " +
-                "values (:id, :name)", new BeanPropertySqlParameterSource(author));
-        namedParameterJdbcOperations.update("insert into genres (id, `name`, code) " +
-                "values (:id, :name, :code)", new BeanPropertySqlParameterSource(genre));
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", book.getId());
-        params.put("name", book.getName());
-        params.put("isbn", book.getIsbn());
-        params.put("genreId", book.getGenre().getId());
-        params.put("authorId", book.getAuthor().getId());
-        namedParameterJdbcOperations.update("insert into books (id, `name`, isbn, author_id, genre_id) " +
-                "values (:id, :name, :isbn, :authorId, :genreId)", params);
-
-    }
-
-    @AfterEach
-    void tearDown() {
-        namedParameterJdbcOperations.update("delete from books where id is not null", Collections.emptyMap());
-        namedParameterJdbcOperations.update("delete from genres where id is not null", Collections.emptyMap());
-        namedParameterJdbcOperations.update("delete from authors where id is not null", Collections.emptyMap());
+        testEntityManager.persist(author);
+        testEntityManager.persist(genre);
+        testEntityManager.persist(book);
     }
 
     @Test
     void deletingGenreUsedInBooks() {
-        assertThrows(GenreHasBookException.class, () -> genreDao.deleteById(genre.getId()));
+        assertThrows(Exception.class, () -> {
+            genreDao.deleteById(genre.getId());
+            assertTrue(genreDao.existsById(genre.getId()));
+        });
     }
 
     @Test
     void deletingAuthorUsedInBooks() {
-        assertThrows(AuthorHasBookException.class, () -> authorDao.deleteById(author.getId()));
+        assertThrows(Exception.class, () -> {
+            authorDao.deleteById(author.getId());
+            assertTrue(authorDao.existsById(author.getId()));
+        });
     }
 }

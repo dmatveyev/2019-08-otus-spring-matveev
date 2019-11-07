@@ -1,6 +1,5 @@
 package ru.otus.spring01.library.service;
 
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -10,7 +9,7 @@ public class ISBNGenerator {
 
     private Random random;
 
-    private ISBNGenerator () {
+    public ISBNGenerator () {
         random = new Random();
     }
 

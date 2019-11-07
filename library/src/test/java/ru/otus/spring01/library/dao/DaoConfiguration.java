@@ -1,11 +1,14 @@
 package ru.otus.spring01.library.dao;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import ru.otus.spring01.library.service.ISBNGenerator;
 
-@Configuration
-@PropertySource("classpath:application-test.yaml")
-@ComponentScan({"ru.otus.spring01.library.dao", "ru.otus.spring01.library.service"})
+@TestConfiguration
 public class DaoConfiguration {
+
+    @Bean
+    public ISBNGenerator isbnGenerator() {
+        return new ISBNGenerator();
+    }
 }

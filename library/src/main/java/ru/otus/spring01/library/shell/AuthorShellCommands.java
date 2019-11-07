@@ -25,7 +25,7 @@ public class AuthorShellCommands {
     private final BookDao bookDao;
 
     @ShellMethod(key = COUNT_AUTHORS, value = "get Authors count")
-    public int getAuthorCount() {
+    public Long getAuthorCount() {
         return authorDao.count();
     }
 
@@ -33,10 +33,10 @@ public class AuthorShellCommands {
     public String createAuthor(String name) {
         Author author = new Author();
         author.setName(name);
-        if (authorDao.contains(author)) {
+        if (authorDao.existsByName(name)) {
             return "Author is contained";
         }
-        authorDao.insert(author);
+        authorDao.save(author);
         return "Created";
     }
 
