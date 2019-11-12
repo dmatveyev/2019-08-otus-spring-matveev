@@ -1,10 +1,11 @@
 package ru.otus.spring01.library.dao;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
@@ -17,13 +18,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.otus.spring01.library.dao.TestConstants.*;
 
-@DataJpaTest
+@DataMongoTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 @DisplayName("Tests for Book Dao")
 class BookDaoTest {
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private BookDao bookDao;
@@ -31,6 +32,33 @@ class BookDaoTest {
     @Autowired
     private ISBNGenerator isbnGenerator;
 
+    private Author author;
+    private Genre genre;
+    private Book book;
+    private Book book2;
+
+    @BeforeEach
+    void setUp() {
+        author = new Author(FIRST_AUTHOR_ID, FIRST_AUTHOR_NAME);
+        genre = new Genre(FIRST_GENRE_ID, FIRST_GENRE_NAME, FIRST_GENRE_CODE);
+        book = new Book(FIRST_BOOK_ID, FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
+        book.setGenre(genre);
+        book.setAuthor(author);
+        book2 = new Book(SECOND_BOOK_ID, SECOND_BOOK_NAME, SECOND_BOOK_ISBN);
+        book2.setAuthor(author);
+        book2.setGenre(genre);
+        mongoTemplate.save(genre);
+        mongoTemplate.save(author);
+        mongoTemplate.save(book);
+        mongoTemplate.save(book2);
+    }
+
+    void tearDown() {
+        mongoTemplate.remove(book);
+        mongoTemplate.remove(book2);
+        mongoTemplate.remove(genre);
+        mongoTemplate.remove(author);
+    }
 
     @Test
     @DisplayName("Checks count method")
@@ -49,7 +77,7 @@ class BookDaoTest {
         newBook.setAuthor(author);
         bookDao.save(newBook);
         assertEquals(3, bookDao.count());
-
+        mongoTemplate.remove(newBook);
     }
 
     @Test
@@ -58,7 +86,7 @@ class BookDaoTest {
         Book byId = bookDao.getById(FIRST_BOOK_ID);
         assertEquals(FIRST_BOOK_ISBN, byId.getIsbn());
         assertEquals(FIRST_AUTHOR_NAME, byId.getAuthor().getName());
-        assertEquals(SECOND_GENRE_NAME, byId.getGenre().getName());
+        assertEquals(FIRST_GENRE_NAME, byId.getGenre().getName());
 
         Book nullable = bookDao.getById(UUID.randomUUID());
         assertNull(nullable);
@@ -97,7 +125,7 @@ class BookDaoTest {
     void getByGenre() {
         Genre genre = new Genre(FIRST_GENRE_ID, FIRST_GENRE_NAME, FIRST_GENRE_CODE);
         List<Book> byGenre = bookDao.getByGenre(genre);
-        assertEquals(1, byGenre.size());
+        assertEquals(2, byGenre.size());
         Genre fakeGenre = new Genre();
         List<Book> byGenre1 = bookDao.getByGenre(fakeGenre);
         assertEquals(0, byGenre1.size());
@@ -114,12 +142,12 @@ class BookDaoTest {
     @Test
     @DisplayName("Checks deletion book by id")
     void deleteById() {
-        Genre genre = new Genre(FIRST_GENRE_ID, FIRST_GENRE_NAME, FIRST_GENRE_CODE);
+        Genre genre = new Genre(SECOND_GENRE_ID, SECOND_GENRE_NAME, SECOND_GENRE_CODE);
         Author author = new Author(FIRST_AUTHOR_ID, FIRST_AUTHOR_NAME);
         Book newBook = new Book(UUID.randomUUID(), FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
         newBook.setGenre(genre);
         newBook.setAuthor(author);
-        testEntityManager.persist(newBook);
+        mongoTemplate.save(newBook);
         assertEquals(3, bookDao.count());
         bookDao.deleteById(newBook.getId());
         boolean contains = bookDao.existsByNameAndGenreNameAndAuthorName(newBook.getName(),
@@ -133,7 +161,7 @@ class BookDaoTest {
     @Test
     @DisplayName("Checks contains method")
     void containsBook() {
-        Genre genre = new Genre(SECOND_GENRE_ID, SECOND_GENRE_NAME, SECOND_GENRE_CODE);
+        Genre genre = new Genre(FIRST_GENRE_ID, FIRST_GENRE_NAME, FIRST_GENRE_CODE);
         Author author = new Author(FIRST_AUTHOR_ID, FIRST_AUTHOR_NAME);
         Book newBook = new Book(FIRST_BOOK_ID, FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
         newBook.setGenre(genre);

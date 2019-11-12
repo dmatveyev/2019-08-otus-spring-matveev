@@ -1,10 +1,12 @@
 package ru.otus.spring01.library.dao;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.Genre;
 
@@ -13,7 +15,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataMongoTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 @DisplayName("Tests for Genre Dao")
 class GenreDaoTest {
@@ -26,10 +28,27 @@ class GenreDaoTest {
     private static final String SECOND_TEST_CODE = "00002";
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private GenreDao genreDao;
+    private Genre genre1;
+    private Genre genre2;
+
+    @BeforeEach
+    void setUp() {
+        genre1 = new Genre(FIRST_ID, FIRST_TEST_NAME, FIRST_TEST_CODE);
+        genre2 = new Genre(SECOND_ID, SECOND_TEST_NAME, SECOND_TEST_CODE);
+        mongoTemplate.save(genre1);
+        mongoTemplate.save(genre2);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mongoTemplate.remove(genre1);
+        mongoTemplate.remove(genre2);
+    }
+
 
 
     @Test
@@ -61,7 +80,7 @@ class GenreDaoTest {
         Genre genre = new Genre();
         genre.setName(FIRST_TEST_NAME + "1");
         genre.setCode(FIRST_TEST_CODE + "1");
-        testEntityManager.persist(genre);
+        mongoTemplate.save(genre);
         assertTrue(genreDao.existsById(genre.getId()));
         assertEquals(3, genreDao.count());
         genreDao.deleteById(genre.getId());
@@ -77,20 +96,6 @@ class GenreDaoTest {
         genre.setCode(FIRST_TEST_CODE);
         boolean contains = genreDao.existsByNameAndCode(genre.getName(), genre.getCode());
         assertTrue(contains);
-    }
-
-    @Test
-    @DisplayName("Checks that duplicate genre won't be inserted")
-    void nonInsertDuplicate() {
-        Genre genre = new Genre();
-        genre.setName(FIRST_TEST_NAME);
-        genre.setCode(FIRST_TEST_CODE);
-        assertThrows(Exception.class, () -> {
-            genreDao.save(genre);
-            Genre byId = genreDao.getById(FIRST_ID);
-            assertNotNull(byId);
-            assertEquals(2, genreDao.count());
-        });
     }
 
     @Test

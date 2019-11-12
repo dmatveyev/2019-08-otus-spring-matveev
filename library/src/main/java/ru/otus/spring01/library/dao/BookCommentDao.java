@@ -1,6 +1,6 @@
 package ru.otus.spring01.library.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.BookComment;
 import ru.otus.spring01.library.domain.Person;
@@ -8,7 +8,7 @@ import ru.otus.spring01.library.domain.Person;
 import java.util.List;
 import java.util.UUID;
 
-public interface BookCommentDao extends CrudRepository<BookComment, UUID> {
+public interface BookCommentDao extends MongoRepository<BookComment, UUID> {
 
     List<BookComment> findAll();
 
@@ -18,5 +18,5 @@ public interface BookCommentDao extends CrudRepository<BookComment, UUID> {
 
     BookComment save(BookComment comment);
 
-    void deleteCommentById(UUID id);
+    BookComment getById(UUID id);
 }

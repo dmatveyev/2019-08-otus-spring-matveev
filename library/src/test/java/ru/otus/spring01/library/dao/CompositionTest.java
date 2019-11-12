@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.Author;
@@ -16,7 +16,7 @@ import ru.otus.spring01.library.service.ISBNGenerator;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+@DataMongoTest
 @ContextConfiguration(classes = DaoConfiguration.class)
 public class CompositionTest {
 
@@ -34,7 +34,7 @@ public class CompositionTest {
     private ISBNGenerator isbnGenerator;
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @BeforeAll
     static void createDate() {
@@ -56,9 +56,9 @@ public class CompositionTest {
     @Rollback
     void setUp() {
         book.setIsbn(isbnGenerator.generateNumber());
-        testEntityManager.persist(author);
-        testEntityManager.persist(genre);
-        testEntityManager.persist(book);
+        mongoTemplate.save(author);
+        mongoTemplate.save(genre);
+        mongoTemplate.save(book);
     }
 
     @Test

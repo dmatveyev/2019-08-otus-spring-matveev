@@ -1,12 +1,12 @@
 package ru.otus.spring01.library.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface GenreDao extends CrudRepository<Genre, UUID> {
+public interface GenreDao extends MongoRepository<Genre, UUID> {
     Genre save(Genre genre);
 
     Genre getById(UUID id);

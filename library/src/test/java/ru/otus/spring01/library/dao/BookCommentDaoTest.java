@@ -1,11 +1,11 @@
 package ru.otus.spring01.library.dao;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.*;
@@ -16,13 +16,13 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataMongoTest
 @ActiveProfiles("test")
 @ContextConfiguration(classes = DaoConfiguration.class)
 class BookCommentDaoTest {
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private BookCommentDao bookCommentDao;
@@ -37,7 +37,6 @@ class BookCommentDaoTest {
     private BookComment bookComment;
 
     @BeforeEach
-    @Rollback
     void setUp() {
         author = new Author();
         author.setName("TestAuthor");
@@ -54,11 +53,20 @@ class BookCommentDaoTest {
         bookComment.setBook(book);
         bookComment.setPerson(person);
         bookComment.setComment("testcomment");
-        testEntityManager.persist(genre);
-        testEntityManager.persist(author);
-        testEntityManager.persist(book);
-        testEntityManager.persist(person);
-        testEntityManager.persist(bookComment);
+        mongoTemplate.save(genre);
+        mongoTemplate.save(author);
+        mongoTemplate.save(book);
+        mongoTemplate.save(person);
+        mongoTemplate.save(bookComment);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mongoTemplate.remove(bookComment);
+        mongoTemplate.remove(person);
+        mongoTemplate.remove(book);
+        mongoTemplate.remove(genre);
+        mongoTemplate.remove(author);
     }
 
     @Test
@@ -100,15 +108,15 @@ class BookCommentDaoTest {
         String newcomment = "newcomment";
         bookComment.setComment(newcomment);
         bookCommentDao.save(bookComment);
-        BookComment updatedBook = testEntityManager.find(BookComment.class, bookComment.getId());
+        BookComment updatedBook = mongoTemplate.findById(bookComment.getId(), BookComment.class );
         assertEquals(newcomment, updatedBook.getComment());
         assertEquals(1, bookCommentDao.count());
     }
 
     @Test
     void deleteComment() {
-        bookCommentDao.deleteCommentById(bookComment.getId());
-        List<BookComment> all = bookCommentDao.findAll();
-        assertEquals(0, all.size());
+        bookCommentDao.deleteById(bookComment.getId());
+        assertNull(bookCommentDao.getById(bookComment.getId()));
+
     }
 }
