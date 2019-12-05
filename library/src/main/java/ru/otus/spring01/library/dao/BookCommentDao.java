@@ -16,7 +16,11 @@ public interface BookCommentDao extends MongoRepository<BookComment, UUID> {
 
     List<BookComment> getBookCommentsByBook(Book book);
 
+    long countBookCommentByBookId(UUID bookId);
+
     BookComment save(BookComment comment);
 
     BookComment getById(UUID id);
+
+    void deleteByBookId(UUID bookId);
 }

@@ -3,6 +3,7 @@ package ru.otus.spring01.library.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Author {
     private UUID id;
     private String name;
 
+    @DBRef
     private List<Book> books = new ArrayList<>();
 
     public Author() {

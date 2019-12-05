@@ -119,4 +119,17 @@ class BookCommentDaoTest {
         assertNull(bookCommentDao.getById(bookComment.getId()));
 
     }
+
+    @Test
+    void getCountCommentsByBook() {
+        long count = bookCommentDao.countBookCommentByBookId(book.getId());
+        assertEquals(1L, count);
+    }
+
+    @Test
+    void deleteBookCommentsByBookId() {
+        bookCommentDao.deleteByBookId(book.getId());
+        long count = bookCommentDao.countBookCommentByBookId(book.getId());
+        assertEquals(0L, count);
+    }
 }
