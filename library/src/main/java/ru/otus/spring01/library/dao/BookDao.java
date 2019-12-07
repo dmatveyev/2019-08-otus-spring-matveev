@@ -5,14 +5,11 @@ import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface BookDao extends MongoRepository<Book, UUID> {
+public interface BookDao extends MongoRepository<Book, String> {
     long count();
 
-    Book save(Book book);
-
-    Book getById(UUID id);
+    Book getById(String id);
 
     List<Book> findAll();
 
@@ -24,7 +21,7 @@ public interface BookDao extends MongoRepository<Book, UUID> {
 
     List<Book> getByAuthorName(String authorName);
 
-    void deleteById(UUID id);
+    void deleteById(String id);
 
     boolean existsByNameAndGenreNameAndAuthorName(String bookName, String genreName, String authorName);
 }

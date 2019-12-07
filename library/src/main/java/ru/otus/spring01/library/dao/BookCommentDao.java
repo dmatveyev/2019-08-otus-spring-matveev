@@ -6,9 +6,8 @@ import ru.otus.spring01.library.domain.BookComment;
 import ru.otus.spring01.library.domain.Person;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface BookCommentDao extends MongoRepository<BookComment, UUID> {
+public interface BookCommentDao extends MongoRepository<BookComment, String> {
 
     List<BookComment> findAll();
 
@@ -16,11 +15,9 @@ public interface BookCommentDao extends MongoRepository<BookComment, UUID> {
 
     List<BookComment> getBookCommentsByBook(Book book);
 
-    long countBookCommentByBookId(UUID bookId);
+    long countBookCommentByBookId(String bookId);
 
-    BookComment save(BookComment comment);
+    BookComment getById(String id);
 
-    BookComment getById(UUID id);
-
-    void deleteByBookId(UUID bookId);
+    void deleteByBookId(String bookId);
 }

@@ -4,17 +4,14 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring01.library.domain.Author;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface AuthorDao extends MongoRepository<Author, UUID> {
+public interface AuthorDao extends MongoRepository<Author, String> {
 
-    Author save(Author author);
-
-    Author getById(UUID id);
+    Author getById(String id);
 
     List<Author> findAll();
 
-    void deleteById(UUID id);
+    void deleteById(String id);
 
     boolean existsByName(String name);
 

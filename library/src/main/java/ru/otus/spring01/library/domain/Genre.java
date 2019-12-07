@@ -7,8 +7,6 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @ToString
@@ -17,14 +15,13 @@ import java.util.UUID;
 public class Genre {
 
     @Id
-    private UUID id;
+    private String id;
 
     private String name;
 
     private String code;
 
     public Genre() {
-        this.id = UUID.randomUUID();
     }
 
 }

@@ -4,16 +4,14 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring01.library.domain.Genre;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface GenreDao extends MongoRepository<Genre, UUID> {
-    Genre save(Genre genre);
+public interface GenreDao extends MongoRepository<Genre, String> {
 
-    Genre getById(UUID id);
+    Genre getById(String id);
 
     List<Genre> findAll();
 
-    void deleteById(UUID id);
+    void deleteById(String id);
 
     Genre getByName(String name);
 

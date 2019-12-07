@@ -1,11 +1,11 @@
 package ru.otus.spring01.library.dao;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.*;
@@ -44,10 +44,10 @@ class BookCommentDaoTest {
         genre = new Genre();
         genre.setName("detective");
         genre.setCode("007");
-        book = new Book(UUID.randomUUID(), "test", isbnGenerator.generateNumber());
+        book = new Book(UUID.randomUUID().toString(), "test", isbnGenerator.generateNumber());
         book.setGenre(genre);
         book.setAuthor(author);
-        person = new Person(UUID.randomUUID(), "admin");
+        person = new Person(UUID.randomUUID().toString(), "admin");
         person.setPassword("admin");
         bookComment = new BookComment();
         bookComment.setBook(book);
@@ -58,15 +58,6 @@ class BookCommentDaoTest {
         mongoTemplate.save(book);
         mongoTemplate.save(person);
         mongoTemplate.save(bookComment);
-    }
-
-    @AfterEach
-    void tearDown() {
-        mongoTemplate.remove(bookComment);
-        mongoTemplate.remove(person);
-        mongoTemplate.remove(book);
-        mongoTemplate.remove(genre);
-        mongoTemplate.remove(author);
     }
 
     @Test
@@ -104,6 +95,7 @@ class BookCommentDaoTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void updateComment() {
         String newcomment = "newcomment";
         bookComment.setComment(newcomment);

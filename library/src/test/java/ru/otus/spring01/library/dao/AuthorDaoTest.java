@@ -61,7 +61,7 @@ class AuthorDaoTest {
    @Test
     @DisplayName("Checks deleting Author without books")
     void delete() {
-        Author author = new Author(UUID.randomUUID(), "testname");
+        Author author = new Author(UUID.randomUUID().toString(), "testname");
         mongoTemplate.save(author);
         assertTrue(authorDao.existsByName(author.getName()));
         authorDao.deleteById(author.getId());

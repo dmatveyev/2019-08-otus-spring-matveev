@@ -3,10 +3,7 @@ package ru.otus.spring01.library.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,23 +11,20 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    private UUID id;
+    private String id;
 
     private String name;
 
-    @DBRef
     private Author author;
 
-    @DBRef
     private Genre genre;
 
     private String isbn;
 
     public Book() {
-        this.id = UUID.randomUUID();
     }
 
-    public Book(UUID id, String name, String isbn) {
+    public Book(String id, String name, String isbn) {
         this.id = id;
         this.name = name;
         this.isbn = isbn;

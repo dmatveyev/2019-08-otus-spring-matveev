@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
-import ru.otus.spring01.library.service.ISBNGenerator;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +27,6 @@ class BookDaoTest {
 
     @Autowired
     private BookDao bookDao;
-
-    @Autowired
-    private ISBNGenerator isbnGenerator;
 
     private Author author;
     private Genre genre;
@@ -53,13 +49,6 @@ class BookDaoTest {
         mongoTemplate.save(book2);
     }
 
-    void tearDown() {
-        mongoTemplate.remove(book);
-        mongoTemplate.remove(book2);
-        mongoTemplate.remove(genre);
-        mongoTemplate.remove(author);
-    }
-
     @Test
     @DisplayName("Checks count method")
     void count() {
@@ -72,7 +61,7 @@ class BookDaoTest {
     void insert() {
         Genre genre = new Genre(FIRST_GENRE_ID, FIRST_GENRE_NAME, FIRST_GENRE_CODE);
         Author author = new Author(FIRST_AUTHOR_ID, FIRST_AUTHOR_NAME);
-        Book newBook = new Book(UUID.randomUUID(), FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
+        Book newBook = new Book(UUID.randomUUID().toString(), FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
         newBook.setGenre(genre);
         newBook.setAuthor(author);
         bookDao.save(newBook);
@@ -88,7 +77,7 @@ class BookDaoTest {
         assertEquals(FIRST_AUTHOR_NAME, byId.getAuthor().getName());
         assertEquals(FIRST_GENRE_NAME, byId.getGenre().getName());
 
-        Book nullable = bookDao.getById(UUID.randomUUID());
+        Book nullable = bookDao.getById(UUID.randomUUID().toString());
         assertNull(nullable);
 
     }
@@ -144,7 +133,7 @@ class BookDaoTest {
     void deleteById() {
         Genre genre = new Genre(SECOND_GENRE_ID, SECOND_GENRE_NAME, SECOND_GENRE_CODE);
         Author author = new Author(FIRST_AUTHOR_ID, FIRST_AUTHOR_NAME);
-        Book newBook = new Book(UUID.randomUUID(), FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
+        Book newBook = new Book(UUID.randomUUID().toString(), FIRST_BOOK_NAME, FIRST_BOOK_ISBN);
         newBook.setGenre(genre);
         newBook.setAuthor(author);
         mongoTemplate.save(newBook);
@@ -152,7 +141,7 @@ class BookDaoTest {
         bookDao.deleteById(newBook.getId());
         boolean contains = bookDao.existsByNameAndGenreNameAndAuthorName(newBook.getName(),
                 newBook.getGenre().getName(),
-                newBook.getAuthor().getName() );
+                newBook.getAuthor().getName());
         assertFalse(contains);
         Long count = bookDao.count();
         assertEquals(Long.valueOf(2), count);
@@ -170,7 +159,7 @@ class BookDaoTest {
                 newBook.getGenre().getName(),
                 newBook.getAuthor().getName());
         assertTrue(contains);
-        Book anotherBook = new Book(UUID.randomUUID(),"123", "123");
+        Book anotherBook = new Book(UUID.randomUUID().toString(), "123", "123");
         anotherBook.setAuthor(author);
         anotherBook.setGenre(genre);
         assertFalse(bookDao.existsByNameAndGenreNameAndAuthorName(anotherBook.getName(),
