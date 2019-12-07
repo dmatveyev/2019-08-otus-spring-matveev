@@ -35,7 +35,8 @@ public class GenreShellCommands {
         Genre genre = new Genre();
         genre.setName(name);
         genre.setCode(code);
-        if (genreDao.existsById(genre.getId())) {
+        Genre byName = genreDao.getByName(name);
+        if (byName != null && byName.getCode().equals(code)) {
             return "Genre is contained";
         }
         genreDao.save(genre);
