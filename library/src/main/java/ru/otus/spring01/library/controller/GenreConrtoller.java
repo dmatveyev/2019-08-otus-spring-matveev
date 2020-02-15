@@ -34,7 +34,7 @@ public class GenreConrtoller {
     public String save(@RequestParam("id") String id, GenreDto genreDtoToSave, Model model) {
         GenreDto save = genreService.save(genreDtoToSave);
         model.addAttribute("genre", save);
-        return "editGenre";
+        return "redirect:/genres/all";
     }
 
     @PostMapping("/create")

@@ -15,6 +15,7 @@ import ru.otus.spring01.library.exception.GenreNotFoundException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,19 +28,6 @@ public class BookService {
     private final BookCommentDao bookCommentDao;
     private final ISBNGenerator isbnGenerator;
 
-    public BookDto createAndSaveBook(String name, String genreName, String authorName) {
-        Genre genre = genreDao.getByName(genreName);
-        validateGenre(genreName, genre);
-        Author author = authorDao.getByName(authorName);
-        validateAuthor(authorName, author);
-        Book book = new Book();
-        book.setIsbn(isbnGenerator.generateNumber());
-        book.setName(name);
-        book.setGenre(genre);
-        book.setAuthor(author);
-        Book save = bookDao.save(book);
-        return save.toDto();
-    }
 
     public void validateAuthor(String authorName, Author author) {
         if (Objects.isNull(author)) {
@@ -68,5 +56,37 @@ public class BookService {
 
     public List<BookDto> getAllBooks() {
         return bookDao.findAll().stream().map(Book::toDto).collect(Collectors.toList());
+    }
+
+    public Optional<BookDto> findById(String id) {
+        return bookDao.findById(id).map(Book::toDto);
+    }
+
+    public BookDto create(BookDto toSave) {
+
+        Book byName = bookDao.getByName(toSave.getName());
+        Book book = createBookFromDto(toSave);
+        Book saved = bookDao.save(book);
+        return saved.toDto();
+    }
+
+    private Book createBookFromDto(BookDto toSave) {
+        Book book = new Book();
+        book.setName(toSave.getName());
+
+        Genre genre = genreDao.getById(toSave.getGenreId());
+        book.setGenre(genre);
+        Author author = authorDao.getById(toSave.getAuthorId());
+        book.setAuthor(author);
+        return book;
+    }
+
+    public BookDto save(BookDto bookDtoToSave) {
+        Book bookFromDto = createBookFromDto(bookDtoToSave);
+        return bookDao.save(bookFromDto).toDto();
+    }
+
+    public void delete(String id) {
+        bookDao.deleteById(id);
     }
 }

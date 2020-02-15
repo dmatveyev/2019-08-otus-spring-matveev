@@ -26,7 +26,7 @@ public class BookRestController {
     @PostMapping(value = "/book/")
     public ResponseEntity<BookDto> create(@RequestBody BookDto bookDto) {
 
-        BookDto andSaveBook = bookService.createAndSaveBook(bookDto.getName(), bookDto.getGenre().getName(), bookDto.getAuthor().getName());
+        BookDto andSaveBook = bookService.create(bookDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(andSaveBook);
     }
 

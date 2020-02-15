@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of all genres</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        .authors, .authors td {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <a th:href="@{/menu}">Back to menu</a>
+</div>
+<h1>Authors:</h1>
+<div>
+    <table class="authors">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="author : ${authors}">
+            <td th:text="${author.id}">1</td>
+            <td th:text="${author.name}">Bond</td>
+            <td>
+                <a th:href="@{/authors/edit(id=${author.id})}" href="editAuthor.html">Edit</a>
+            </td>
+            <td>
+                <form th:action="@{/authors/delete}" th:method="delete">
+                    <input type="hidden" name="id" th:value="${author.id}"/>
+                    <input class="btn btn-danger" type="submit" value="Delete" onClick="return confirm('sure?')"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a th:href="@{/authors/create}" href="addAuthor.html">Add new</a>
+</div>
+</body>
+</html>

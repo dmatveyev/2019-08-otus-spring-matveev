@@ -24,4 +24,6 @@ public interface BookDao extends MongoRepository<Book, String> {
     void deleteById(String id);
 
     boolean existsByNameAndGenreNameAndAuthorName(String bookName, String genreName, String authorName);
+
+    Book getByName(String name);
 }

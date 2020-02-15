@@ -35,7 +35,7 @@ public class Book {
     }
 
     public BookDto toDto() {
-        return new BookDto(id, name, author.toDto(), genre.toDto(), isbn);
+        return new BookDto(id, name, author.getId(), author.getName(), genre.getId(), genre.getName(), isbn);
     }
 
     @Override
