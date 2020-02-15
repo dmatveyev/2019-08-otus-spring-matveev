@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of all genres</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        .genres, .genres td {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <a th:href="@{/menu}" href="addGenre.html">Back to menu</a>
+</div>
+<h1>Genres:</h1>
+<div>
+    <table class="genres">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="genre : ${genres}">
+            <td th:text="${genre.id}">1</td>
+            <td th:text="${genre.name}">Bond</td>
+            <td th:text="${genre.code}">007</td>
+            <td>
+                <a th:href="@{/genres/edit(id=${genre.id})}" href="editGenre.html">Edit</a>
+            </td>
+            <td>
+                <form th:action="@{/genres/delete}" th:method="delete">
+                    <input type="hidden" name="id" th:value="${genre.id}"/>
+                    <input class="btn btn-danger" type="submit" value="Delete" onClick="return confirm('sure?')"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a th:href="@{/genres/create}" href="addGenre.html">Add new</a>
+</div>
+</body>
+</html>

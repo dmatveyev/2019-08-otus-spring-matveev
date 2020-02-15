@@ -9,10 +9,13 @@ import ru.otus.spring01.library.dao.GenreDao;
 import ru.otus.spring01.library.domain.Author;
 import ru.otus.spring01.library.domain.Book;
 import ru.otus.spring01.library.domain.Genre;
+import ru.otus.spring01.library.dto.BookDto;
 import ru.otus.spring01.library.exception.AuthorNotFountException;
 import ru.otus.spring01.library.exception.GenreNotFoundException;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class BookService {
     private final BookCommentDao bookCommentDao;
     private final ISBNGenerator isbnGenerator;
 
-    public void createAndSaveBook(String name, String genreName, String authorName) {
+    public BookDto createAndSaveBook(String name, String genreName, String authorName) {
         Genre genre = genreDao.getByName(genreName);
         validateGenre(genreName, genre);
         Author author = authorDao.getByName(authorName);
@@ -34,7 +37,8 @@ public class BookService {
         book.setName(name);
         book.setGenre(genre);
         book.setAuthor(author);
-        bookDao.save(book);
+        Book save = bookDao.save(book);
+        return save.toDto();
     }
 
     public void validateAuthor(String authorName, Author author) {
@@ -60,5 +64,9 @@ public class BookService {
             return "Removed";
         }
         return "Book not found";
+    }
+
+    public List<BookDto> getAllBooks() {
+        return bookDao.findAll().stream().map(Book::toDto).collect(Collectors.toList());
     }
 }

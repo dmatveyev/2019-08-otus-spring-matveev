@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ru.otus.spring01.library.dto.AuthorDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,6 +26,11 @@ public class Author {
     public Author(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public AuthorDto toDto() {
+        AuthorDto authorDto = new AuthorDto(id, name, books.stream().map(Book::toDto).collect(Collectors.toList()));
+        return authorDto;
     }
 
     @Override
