@@ -12,7 +12,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/genres")
 @RequiredArgsConstructor
-public class GenreConrtoller {
+public class GenreController {
 
     private final GenreService genreService;
 
@@ -46,7 +46,7 @@ public class GenreConrtoller {
     }
 
     @GetMapping("/create")
-    public String showCreateForm( Model model) {
+    public String showCreateForm(Model model) {
         model.addAttribute("genre", new GenreDto());
         return "addGenre";
     }

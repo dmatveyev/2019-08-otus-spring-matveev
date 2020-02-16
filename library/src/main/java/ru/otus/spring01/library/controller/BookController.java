@@ -24,6 +24,8 @@ public class BookController {
     public String getAll(Model model) {
         List<BookDto> allBooks = bookService.getAllBooks();
         model.addAttribute("books", allBooks);
+        model.addAttribute("genres", genreService.getAllGenres());
+        model.addAttribute("authors", authorService.getAllAuthors());
         return "books";
     }
 
