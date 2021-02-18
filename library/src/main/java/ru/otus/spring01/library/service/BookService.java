@@ -72,6 +72,7 @@ public class BookService {
 
     private Book createBookFromDto(BookDto toSave) {
         Book book = new Book();
+        book.setId(toSave.getId());
         book.setName(toSave.getName());
 
         Genre genre = genreDao.getById(toSave.getGenreId());

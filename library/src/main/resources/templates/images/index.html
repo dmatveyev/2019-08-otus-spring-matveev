@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="test.js"></script>
+    <script type="text/javascript">
+        /* //document.write("Hello world!!!");
+         var person;
+         //
+         person =prompt("Who are you?");
+         f(person)
+         function f(text) {
+             if (confirm("confirm?")) {
+                 alert("Hello " + text);
+             } else {
+                 alert("Warning")
+             }
+         }*/
+        function f(button) {
+            var person = prompt("Who are you?" + button.name);
+            alert("Hello " + person);
+        }
+
+        var count = 0;
+
+        function counter(element) {
+            count++;
+            element.innerHTML = "Наведено " + count + " раз";
+        }
+
+        function valid(form) {
+            var fail = false;
+            var name = form.name.value;
+            var email = form.email.value;
+            var password = form.password.value;
+            var rePassword = form.rePassword.value;
+            var state = form.state.value;
+            if (name === "" || name === " ") {
+                fail = "Вы не ввели имя!";
+            } else if (email.split('@').length - 1 == 0) {
+                fail = "Вы не ввели некорректный E-mail";
+            } else if (email === "" || email === " ") {
+                fail = "Вы не ввели E-mail!";
+            } else if (password === "" || password === " ") {
+                fail = "Вы не ввели пароль!";
+            } else if (rePassword === "" || rePassword === " ") {
+                fail = "Вы не повторили пароль!";
+            } else if (password !== rePassword) {
+                fail = "Пароли не совпадают!!!"
+            } else if (state == "") {
+                fail = "Вы не выбрали пол"
+            }
+            if (fail) {
+                alert(fail);
+            } else {
+                alert("Ok!!!!" + state);
+                window.location = "http://www.google.com";
+            }
+        }
+    </script>
+</head>
+<body onload="timer22()">
+<script type="text/javascript">
+    var ccc = 0;
+    /*function myFunc() {
+        counter++;
+        alert("Секунд прошло: " + counter);
+        if (counter === 3) {
+            clearInterval(id);
+        }
+    }*/
+
+    function timer1() {
+        ccc++;
+        document.getElementById("cc").innerHTML = ccc;
+        setTimeout("timer1()", 1000);
+
+    }
+</script>
+<div>
+    <input type="button" name="button" value="Click me" onclick="f(this)"/> <br/>
+    <span onmouseover="counter(this)">Наведено 0 раз</span> <br/>
+    <span id="cc">-1</span> <br/>
+    <form action="" method="post" name="test" id="form">
+        <label for="name">Имя: </label> <br/>
+        <input type="text" name="name" placeholder="Имя" id="name"/><br/>
+        <label for="email">E-mail: </label> <br/>
+        <input type="text" name="email" placeholder="E-mail" id="email"/><br/>
+        <label for="password">Пароль: </label><br/>
+        <input type="password" name="password" placeholder="Пароль" id="password"/><br/>
+        <label for="rePassword">Подтвердите пароль: </label><br/>
+        <input type="password" name="rePassword" placeholder="Подтвердите пароль" id="rePassword"/><br/>
+
+        <span>Выберите пол: </span>
+        <input type="radio" name="state" id="male" value="Муж"/>
+        <label for="male">Муж.</label>
+        <input type="radio" name="state" id="female" value="Жен"/>
+        <label for="female">Жен.</label><br/>
+        <input type="button" onclick="valid(document.getElementById('form'))"
+               name="submit" value="Отправить"/>
+    </form>
+</div>
+</body>
+</html>
