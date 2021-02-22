@@ -10,5 +10,33 @@
 
 .app-wrapper-content {
   grid-area: c;
-  background-color: powderblue;
+  background-color: darkseagreen;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #4caf50;
+  color: white;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/*tr:hover {
+  background-color: darkgreen;
+  color: red;
+}*/
+
+tr:nth-child(even) {
+   background-color: #f2f2f2;
+ }
+
+tr:nth-child(odd) {
+  background-color: lightgray;
 }

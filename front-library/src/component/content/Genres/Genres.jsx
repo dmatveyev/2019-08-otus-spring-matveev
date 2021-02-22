@@ -1,4 +1,5 @@
 import React from "react";
+import './Genres.module.css'
 
 const Genres = (props) => {
 
