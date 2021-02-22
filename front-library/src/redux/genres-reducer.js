@@ -1,4 +1,3 @@
-import axios from "axios";
 import {createGenre, getGenresApi} from "../api/api";
 
 const ADD_GENRE = 'ADD_GENRE';
@@ -6,9 +5,7 @@ const UPDATE_GENRE = 'UPDATE_GENRE';
 const SET_GENRES = 'SET_GENRES';
 
 let initialState = {
-    genres: [
-        {name: "Action", code: "001"},
-    ],
+    genres: [],
     newGenre: {name: "", code: ""}
 
 };

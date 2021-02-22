@@ -1,13 +1,19 @@
 import axios from "axios";
 
+const baseUrl = "http://localhost:8081/api";
+
+const instance = axios.create({
+    baseURL: baseUrl
+});
+
 export const getGenresApi = () => {
-    return axios
-        .get("http://localhost:8081/api/genres")
+    return instance
+        .get("/genres")
         .then(response => response.data)
 };
 
 export const createGenre = (genre) => {
 
-    return axios.post("http://localhost:8081/api/genre", genre)
+    return instance.post("/genre", genre)
         .then(response => response.data)
 };
