@@ -1,5 +1,9 @@
+import axios from "axios";
+import {createGenre, getGenresApi} from "../api/api";
+
 const ADD_GENRE = 'ADD_GENRE';
 const UPDATE_GENRE = 'UPDATE_GENRE';
+const SET_GENRES = 'SET_GENRES';
 
 let initialState = {
     genres: [
@@ -9,11 +13,36 @@ let initialState = {
 
 };
 
+export const setGenres = (genres) => {
+    return {
+        type: SET_GENRES,
+        genres: genres
+    }
+};
+
+
+export const getGenres = () => {
+    return (dispatch) => {
+        getGenresApi()
+            .then(data => {
+                dispatch(setGenres(data))
+            });
+    };
+
+};
+
 const genreReducer = (state = initialState, action) => {
 
     switch (action.type) {
+        case SET_GENRES: {
+            return {
+                ...state,
+                genres: action.genres
+            }
+        }
+
         case ADD_GENRE: {
-            let newGenre = {...state.newGenre};
+            let newGenre = {...action.newGenre};
 
             return {
                 ...state,
@@ -33,13 +62,23 @@ const genreReducer = (state = initialState, action) => {
 
 };
 
-export const addGenreActionCreator = () => ({
-    type: ADD_GENRE
+export const addGenre = (genre) =>{
+    return (dispatch) => {
+        createGenre(genre)
+            .then(data => {
+                dispatch(addGenreActionCreator(data))
+            });
+    };
+};
+
+export const addGenreActionCreator = (genre) => ({
+    type: ADD_GENRE,
+    newGenre: genre
 });
 
 export const updateGenreActionCreator = (newGenre) => ({
-   type: UPDATE_GENRE,
-   newGenre
+    type: UPDATE_GENRE,
+    newGenre
 });
 
 export default genreReducer;

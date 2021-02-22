@@ -1,6 +1,24 @@
 import Genres from "./Genres";
 import {connect} from "react-redux";
-import {addGenreActionCreator, updateGenreActionCreator} from "../../../redux/genres-reducer";
+import {addGenre, getGenres, updateGenreActionCreator} from "../../../redux/genres-reducer";
+import * as React from "react";
+
+class GenresContainer extends React.Component {
+
+    componentDidMount() {
+       this.props.getGenres()
+    }
+
+
+    render() {
+        return (
+            <div>
+                <Genres {...this.props}/>
+            </div>
+        )
+    }
+}
+
 
 let mapStateToProps = (state) => {
     
@@ -10,19 +28,13 @@ let mapStateToProps = (state) => {
     }
 };
 
-let mapDispatchToProps = (dispatch) => {
-    
-    return {
-        addGenre: () => {
-            dispatch(addGenreActionCreator())
-        },
-        updateGenre: (newGenre) => {
-            dispatch(updateGenreActionCreator(newGenre))
-        }
-        
-    }
+let AC = {
+    addGenre: addGenre,
+    updateGenre: updateGenreActionCreator,
+    getGenres
 };
 
-let GenresContainer = connect(mapStateToProps, mapDispatchToProps)(Genres);
 
-export default GenresContainer;
+let gc = connect(mapStateToProps, AC)(GenresContainer);
+
+export default gc;

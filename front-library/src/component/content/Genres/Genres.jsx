@@ -27,8 +27,12 @@ const Genres = (props) => {
     let onAddGenre = () => {
         let code = genreCodeRef.current.value;
         let name = genreNameRef.current.value;
+        let newGenre = {
+            name,
+            code
+        };
         if (name && code) {
-            props.addGenre();
+            props.addGenre(newGenre);
         } else {
             alert("empty data!")
         }
