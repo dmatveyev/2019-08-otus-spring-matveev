@@ -22,11 +22,19 @@ class GenresContainer extends React.Component {
         this.props.getGenresCount();
     };
 
+    onAddGenre = (newGenre) => {
+        this.props.addGenre(newGenre);
+        this.props.getGenres(this.props.currentPage, this.props.pageSize);
+        this.props.getGenresCount();
+    };
+
 
     render() {
         return (
             <div>
-                <Genres {...this.props} onPageChanged ={this.onPageChanged} />
+                <Genres {...this.props}
+                        onPageChanged ={this.onPageChanged}
+                        onAddGenre={this.onAddGenre}/>
             </div>
         )
     }

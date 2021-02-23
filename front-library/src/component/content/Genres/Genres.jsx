@@ -35,9 +35,7 @@ const Genres = (props) => {
             code
         };
         if (name && code) {
-            props.addGenre(newGenre);
-            props.getGenres(props.currentPage, props.pageSize);
-            props.getGenresCount();
+            props.onAddGenre(newGenre);
         } else {
             alert("empty data!")
         }
