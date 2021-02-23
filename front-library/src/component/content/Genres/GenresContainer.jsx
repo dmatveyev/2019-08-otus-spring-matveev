@@ -1,7 +1,7 @@
 import Genres from "./Genres";
 import {connect} from "react-redux";
 import {
-    addGenre,
+    addGenre, deleteGenre,
     getGenres,
     getGenresCount,
     setCurrentPage,
@@ -28,13 +28,26 @@ class GenresContainer extends React.Component {
         this.props.getGenresCount();
     };
 
+    onEditGenre = (genre) => {
+        alert(`editing: ${genre}`)
+    };
+
+    onDeleteGenre = (genre) => {
+        this.props.deleteGenre(genre);
+        this.props.getGenres(this.props.currentPage, this.props.pageSize);
+        this.props.getGenresCount();
+    };
+
 
     render() {
         return (
             <div>
                 <Genres {...this.props}
                         onPageChanged ={this.onPageChanged}
-                        onAddGenre={this.onAddGenre}/>
+                        onAddGenre={this.onAddGenre}
+                        onEditGenre={this.onEditGenre}
+                        onDeleteGenre={this.onDeleteGenre}
+                />
             </div>
         )
     }
@@ -55,6 +68,7 @@ let mapStateToProps = (state) => {
 let AC = {
     addGenre: addGenre,
     updateGenre: updateGenreActionCreator,
+    deleteGenre,
     getGenres,
     getGenresCount,
     setCurrentPage,

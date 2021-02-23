@@ -34,6 +34,12 @@ public class GenreRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    @DeleteMapping(value = "/genre/{id}")
+    public ResponseEntity<GenreDto> delete(@PathVariable("id") String genreId) {
+        genreService.delete(genreId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<?> entityExistsException(EntityExistsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

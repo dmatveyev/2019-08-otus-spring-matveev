@@ -24,3 +24,9 @@ export const createGenre = (genre) => {
     return instance.post("/genre", genre)
         .then(response => response.data)
 };
+
+export const deleteGenreApi = (genre) => {
+    return instance
+        .delete(`/genre/${genre.id}`)
+        .then(response => response.data)
+};

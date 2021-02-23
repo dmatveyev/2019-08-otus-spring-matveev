@@ -1,6 +1,5 @@
 import React from "react";
 import styles from './Genres.module.css'
-import {getGenres, getGenresCount} from "../../../redux/genres-reducer";
 
 const Genres = (props) => {
 
@@ -10,6 +9,8 @@ const Genres = (props) => {
             <td>{genre.id}</td>
             <td>{genre.name}</td>
             <td>{genre.code}</td>
+            <td><button className={styles.editBtn} onClick={() => props.onEditGenre(genre)}>Edit</button></td>
+            <td><button className={styles.deleteBtn} onClick={() => props.onDeleteGenre(genre)}>Delete</button></td>
         </tr>
     ));
 
@@ -68,6 +69,8 @@ const Genres = (props) => {
                         <th>ID</th>
                         <th>Name</th>
                         <th>Code</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

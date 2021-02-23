@@ -1,4 +1,4 @@
-import {createGenre, getGenresApi, getGenresCountApi} from "../api/api";
+import {createGenre, deleteGenreApi, getGenresApi, getGenresCountApi} from "../api/api";
 
 const ADD_GENRE = 'ADD_GENRE';
 const UPDATE_GENRE = 'UPDATE_GENRE';
@@ -101,6 +101,12 @@ export const addGenre = (genre) =>{
             .then(data => {
                 dispatch(addGenreActionCreator(data))
             });
+    };
+};
+
+export const deleteGenre = (genre) =>{
+    return (dispatch) => {
+        deleteGenreApi(genre).then(r => r)
     };
 };
 
