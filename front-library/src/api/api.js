@@ -6,11 +6,18 @@ const instance = axios.create({
     baseURL: baseUrl
 });
 
-export const getGenresApi = () => {
+export const getGenresApi = (page, count) => {
     return instance
-        .get("/genres")
+        .get(`/genres?page=${page}&count=${count}`)
         .then(response => response.data)
 };
+
+export const getGenresCountApi = () => {
+    return instance
+        .get(`/genres/count`)
+        .then(response => response.data)
+};
+
 
 export const createGenre = (genre) => {
 

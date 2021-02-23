@@ -19,8 +19,13 @@ public class GenreRestController {
     private final GenreService genreService;
 
     @GetMapping("/genres")
-    public List<GenreDto> getGenres() {
-        return genreService.getAllGenres();
+    public List<GenreDto> getGenres(@RequestParam("page") int page, @RequestParam("count") int count) {
+        return genreService.getAllGenres(page, count);
+    }
+
+    @GetMapping("/genres/count")
+    public Long getGenresCount() {
+        return genreService.getGenresCount();
     }
 
     @PostMapping(value = "/genre", consumes = MediaType.APPLICATION_JSON_VALUE)

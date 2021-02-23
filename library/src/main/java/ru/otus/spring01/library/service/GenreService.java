@@ -2,6 +2,7 @@ package ru.otus.spring01.library.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.otus.spring01.library.dao.GenreDao;
 import ru.otus.spring01.library.domain.Genre;
@@ -18,9 +19,9 @@ public class GenreService {
 
     private final GenreDao genreDao;
 
-    public List<GenreDto> getAllGenres() {
+    public List<GenreDto> getAllGenres(int page, int count) {
 
-        return genreDao.findAll().stream().map(Genre::toDto).collect(Collectors.toList());
+        return genreDao.findAll(PageRequest.of(page-1, count)).stream().map(Genre::toDto).collect(Collectors.toList());
     }
 
     public GenreDto create(GenreDto genreDto) {
@@ -54,5 +55,9 @@ public class GenreService {
         genre.setName(genreDto.getName());
         genre.setCode(genreDto.getCode());
         return genre;
+    }
+
+    public Long getGenresCount() {
+        return genreDao.count();
     }
 }

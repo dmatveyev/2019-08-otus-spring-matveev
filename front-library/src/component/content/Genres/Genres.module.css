@@ -1,0 +1,23 @@
+.pagination {
+    display: inline-block;
+}
+
+.pagination span {
+    color: black;
+    background-color: lightgreen;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 4px; /* 0 is for top and bottom. Feel free to change it */
+}
+
+.pagination span.selectedPage {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination span:hover:not(.active) {
+    background-color: #ddd;
+}
