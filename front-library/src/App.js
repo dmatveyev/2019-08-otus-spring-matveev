@@ -1,4 +1,4 @@
-import React from "react"
+import React, {Component} from "react"
 import './App.css';
 import Navbar from "./component/navbar/Navbar";
 import {Route} from "react-router-dom";
@@ -8,20 +8,22 @@ import Genres from "./component/content/Genres/Genres";
 import AuthorsContainer from "./component/content/Authors/AuthorsContainer";
 import GenresContainer from "./component/content/Genres/GenresContainer";
 
-const App = (props) => {
+class App extends Component {
+    render() {
 
 
-    return (
-    <div className="app-wrapper">
-      <HeaderContainer />
-      <Navbar/>
-      <div className="app-wrapper-content">
-        <Route path="/books" render={() => <BooksContainer store={props.store} />} />
-        <Route path="/authors" render={() => <AuthorsContainer store={props.store} />} />
-        <Route path="/genres" render={() => <GenresContainer store={props.store} />} />
-      </div>
-    </div>
-  );
-};
+        return (
+            <div className="app-wrapper">
+                <HeaderContainer/>
+                <Navbar/>
+                <div className="app-wrapper-content">
+                    <Route path="/books" render={() => <BooksContainer store={this.props.store}/>}/>
+                    <Route path="/authors" render={() => <AuthorsContainer store={this.props.store}/>}/>
+                    <Route path="/genres" render={() => <GenresContainer store={this.props.store}/>}/>
+                </div>
+            </div>
+        );
+    }
+}
 
 export default App;

@@ -4,12 +4,14 @@ import thunk  from "redux-thunk"
 import bookReducer from "./book-reducer";
 import authorReducer from "./author-reducer";
 import genreReducer from "./genres-reducer";
+import {reducer as formReducer} from "redux-form"
 
 let reducers = combineReducers({
     auth: authReducer,
     books: bookReducer,
     authors: authorReducer,
-    genres: genreReducer
+    genres: genreReducer,
+    form: formReducer
 });
 
 let store = createStore(reducers, applyMiddleware(thunk));
