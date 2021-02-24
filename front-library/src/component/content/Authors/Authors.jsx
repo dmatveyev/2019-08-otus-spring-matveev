@@ -1,4 +1,5 @@
 import React from "react";
+import Redirect from "react-router-dom/es/Redirect";
 
 
 const Authors = (props) => {
@@ -24,6 +25,9 @@ const Authors = (props) => {
         };
         props.updateNewAuthorText(newAuthor)
     };
+    if (!props.isAuth) {
+        return <Redirect to={"/login"} />
+    }
 
     return (
         <div>

@@ -1,27 +1,22 @@
+import {authMeApi} from "../api/api";
 
 const SET_USER_DATA = 'SET_USER_DATA';
 
 let initialState = {
-    id: null,
+    userId: null,
+    email: null,
+    login: null,
     fullName: null,
     status: null,
     ava: null,
     isAuth: false,
     items: null
 };
-
-export const authMe = () => {
-
-
-    return () => {
-    }
-};
-
 const authReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case SET_USER_DATA:
-            return  {
+            return {
                 ...state,
                 ...action.data,
                 isAuth: true
@@ -32,11 +27,22 @@ const authReducer = (state = initialState, action) => {
     }
 };
 
-const simpleReducer = (state, action) => {
-  return  {
-      ...state,
-      ...action
-  }
+export const authMe = () => {
+    return (dispatch) => {
+        authMeApi().then(data => {
+                if (data.status === 200) {
+                    let {userId, login, email} = data.data;
+                    dispatch(setUserData(userId, email, login))
+                }
+            }
+        )
+    }
 };
 
-export default simpleReducer;
+
+const setUserData = (userId, email, login) => ({
+    type: SET_USER_DATA,
+    data: {userId, email, login}
+});
+
+export default authReducer;

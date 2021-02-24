@@ -7,8 +7,12 @@ import {
     setCurrentPage
 } from "../../../redux/genres-reducer";
 import * as React from "react";
+import {compose} from "redux";
+import {withAuthRedirect} from "../../common/redirect/WithAuthRedirect";
 
 class GenresContainer extends React.Component {
+
+    isAuth = this.props.isAuth;
 
     componentDidMount() {
        this.props.getGenres(this.props.currentPage, this.props.pageSize)
@@ -60,7 +64,8 @@ let mapStateToProps = (state) => {
         newGenre: state.genres.newGenre,
         pageSize: state.genres.pageSize,
         totalCount: state.genres.totalCount,
-        currentPage: state.genres.currentPage
+        currentPage: state.genres.currentPage,
+        isAuth: state.auth.isAuth
     }
 };
 
@@ -72,7 +77,9 @@ let AC = {
     setCurrentPage,
 };
 
+let gc = connect(mapStateToProps, AC);
 
-let gc = connect(mapStateToProps, AC)(GenresContainer);
-
-export default gc;
+export default compose(
+    gc,
+    withAuthRedirect
+)(GenresContainer);

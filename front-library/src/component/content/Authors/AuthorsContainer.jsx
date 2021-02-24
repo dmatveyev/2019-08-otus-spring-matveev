@@ -2,13 +2,16 @@ import React from "react"
 import Authors from "./Authors";
 import {connect} from "react-redux";
 import {addAuthorActionCreator, updateNewAuthorTextActionCreator} from "../../../redux/author-reducer";
+import {compose} from "redux";
+import {withAuthRedirect} from "../../common/redirect/WithAuthRedirect";
 
 
 let mapStateToProps = (state) => {
 
     return {
         authors: state.authors.authors,
-        newAuthor: state.authors.newAuthor
+        newAuthor: state.authors.newAuthor,
+        isAuth: state.auth.isAuth
     }
 };
 
@@ -27,5 +30,8 @@ let mapDispatchToProps = (dispatch) => {
 
 };
 
-let AuthorsContainer = connect(mapStateToProps, mapDispatchToProps)(Authors);
-export default AuthorsContainer
+let AuthorsContainer = connect(mapStateToProps, mapDispatchToProps);
+export default compose(
+    AuthorsContainer,
+    withAuthRedirect
+)(Authors)

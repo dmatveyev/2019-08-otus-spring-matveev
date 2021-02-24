@@ -3,6 +3,7 @@ import axios from "axios";
 const baseUrl = "http://localhost:8081/api";
 
 const instance = axios.create({
+    withCredentials: true,
     baseURL: baseUrl
 });
 
@@ -29,4 +30,9 @@ export const deleteGenreApi = (genre) => {
     return instance
         .delete(`/genre/${genre.id}`)
         .then(response => response.data)
+};
+
+
+export const authMeApi = () => {
+    return instance.post(`/authMe`, {}).then(r => r)
 };

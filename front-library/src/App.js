@@ -7,6 +7,8 @@ import BooksContainer from "./component/content/books/BooksContainer";
 import Genres from "./component/content/Genres/Genres";
 import AuthorsContainer from "./component/content/Authors/AuthorsContainer";
 import GenresContainer from "./component/content/Genres/GenresContainer";
+import Login from "./component/content/Login/Login";
+import LoginContainer from "./component/content/Login/LoginContainer";
 
 class App extends Component {
     render() {
@@ -20,6 +22,7 @@ class App extends Component {
                     <Route path="/books" render={() => <BooksContainer store={this.props.store}/>}/>
                     <Route path="/authors" render={() => <AuthorsContainer store={this.props.store}/>}/>
                     <Route path="/genres" render={() => <GenresContainer store={this.props.store}/>}/>
+                    <Route path="/login" render={() => <LoginContainer store={this.props.store}/>}/>
                 </div>
             </div>
         );

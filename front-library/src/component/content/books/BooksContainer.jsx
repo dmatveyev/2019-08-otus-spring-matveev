@@ -2,6 +2,8 @@ import React from "react";
 import Books from "./Books";
 import {connect} from "react-redux"
 import {addBookActionCreator, updateNewBookTextActionCreator} from "../../../redux/book-reducer";
+import {compose} from "redux";
+import {withAuthRedirect} from "../../common/redirect/WithAuthRedirect";
 
 
 let mapStateToProps = (state) => {
@@ -26,6 +28,9 @@ let mapDispatchToProps = (dispatch) => {
     }
 };
 
-let BooksContainer = connect(mapStateToProps, mapDispatchToProps)(Books);
-export default BooksContainer;
+let BooksContainer = connect(mapStateToProps, mapDispatchToProps);
+export default compose(
+    BooksContainer,
+    withAuthRedirect
+)(Books);
 
